@@ -9,8 +9,6 @@ services:
       - NODE_ENV=development
       - TEST=RED_LIGHT
       - AWS_BUCKET=rez541bucket
-    env_file:
-      - ./backend/.env
     networks:
       - cosmosnet
     ports:
@@ -21,7 +19,7 @@ services:
         dockerfile: Dockerfile
       container_name: frontend
       ports:
-        - 5173:5173
+        - 4000:4000
       networks:
         - cosmosnet
 networks:
