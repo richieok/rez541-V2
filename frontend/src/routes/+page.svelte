@@ -1,8 +1,3 @@
-<script>
-    let { data } = $props()
-    console.log(data)
-</script>
-
 <div>
-    <img src="" alt="">
+    <h1>Home</h1>
 </div>
