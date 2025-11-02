@@ -1,0 +1,46 @@
+services:
+  backend:
+    build: ./backend
+    container_name: backend_dev
+    command: npm run start
+    environment:
+      - PORT=4000
+      - NODE_ENV=development
+      - TEST=RED_LIGHT
+      - AWS_BUCKET=rez541bucket
+    env_file:
+      - ./backend/.env
+    networks:
+      - cosmosnet
+    ports:
+      - 4000:4000
+    develop:
+      watch:
+        - path: ./backend/package.json
+          action: rebuild
+        - path: ./backend/package-lock.json
+          action: rebuild
+        - path: ./backend
+          target: /app
+          action: sync+restart
+  frontend:
+      build:
+        context: ./frontend
+        dockerfile: Dockerfile.dev
+      container_name: frontend_dev
+      ports:
+        - 5173:5173
+      networks:
+        - cosmosnet
+      develop:
+        watch:
+          - path: ./frontend/package.json
+            action: rebuild
+          - path: ./frontend/package-lock.json
+            action: rebuild
+          - path: ./frontend
+            target: /app
+            action: sync+restart
+networks:
+  cosmosnet:
+    driver: bridge

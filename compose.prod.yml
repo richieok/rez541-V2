@@ -1,0 +1,29 @@
+services:
+  backend:
+    build: ./backend
+    container_name: backend
+    working_dir: /app
+    command: npm run start
+    environment:
+      - PORT=4000
+      - NODE_ENV=development
+      - TEST=RED_LIGHT
+      - AWS_BUCKET=rez541bucket
+    env_file:
+      - ./backend/.env
+    networks:
+      - cosmosnet
+    ports:
+      - 4000:4000
+  frontend:
+      build:
+        context: ./frontend
+        dockerfile: Dockerfile
+      container_name: frontend
+      ports:
+        - 5173:5173
+      networks:
+        - cosmosnet
+networks:
+  cosmosnet:
+    driver: bridge
