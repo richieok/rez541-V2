@@ -3,20 +3,22 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { SSMClient, GetParametersByPathCommand } from "@aws-sdk/client-ssm"
 
 let options = {
-    region: 'us-east-1'
+    region: process.env.REGION,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 }
 
 const fsignUrl = async ({ client, bucket, key }) => {
     const command = new GetObjectCommand({ Bucket: bucket, Key: key });
-    return getSignedUrl(client, command, { expiresIn: 120 });
+    return getSignedUrl(client, command, { expiresIn: 3600 });
 }
 
-if (process.env.NODE_ENV && process.env.NODE_ENV==="development"){
-    options.credentials = {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-    }
-}
+// if (process.env.NODE_ENV && process.env.NODE_ENV === "development") {
+//     options.credentials = {
+//         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+//         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+//     }
+// }
 
 const client = new S3Client(options);
 
@@ -29,7 +31,7 @@ export const signUrl = async (req, res) => {
         const url = await fsignUrl({ client, bucket: process.env.AWS_BUCKET, key: `${folder}/${filename}` });
         console.log(url)
         res.send(url);
-        
+
     } catch (error) {
         console.log(error)
         console.log(error.message)

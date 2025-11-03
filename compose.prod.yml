@@ -9,6 +9,9 @@ services:
       - NODE_ENV=development
       - TEST=RED_LIGHT
       - AWS_BUCKET=rez541bucket
+      - CLOUD=aws
+      - SSM_PARAMETER_PATH=/rez541/env/
+      - REGION=us-east-1
     networks:
       - cosmosnet
     ports:

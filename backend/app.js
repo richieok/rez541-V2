@@ -2,6 +2,9 @@ import express from 'express';
 import { createServer } from 'node:http'
 import multer from 'multer'
 import { signUrl } from "./managerS3.js"
+import { parametersLoaded } from "./cloud.js"
+
+await parametersLoaded
 
 startservice()
 

@@ -8,6 +8,7 @@ services:
       - NODE_ENV=development
       - TEST=RED_LIGHT
       - AWS_BUCKET=rez541bucket
+      - REGION=us-east-1
     env_file:
       - ./backend/.env
     networks:
