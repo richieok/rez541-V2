@@ -7,7 +7,7 @@ import { testDbConnection } from "./testDb.js"
 
 await parametersLoaded
 
-// await testDbConnection()
+await testDbConnection()
 
 startservice()
 
