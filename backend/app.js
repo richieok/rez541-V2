@@ -9,6 +9,8 @@ import multer from 'multer'
 import { signUrl } from "./managerS3.js"
 import { testDbConnection } from "./testDb.js"
 
+console.log(process.envDB_PASSWORD)
+
 await testDbConnection()
 
 startservice()
