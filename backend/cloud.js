@@ -22,7 +22,7 @@ async function getParameters(client, path) {
     }
 }
 
-export const parametersLoaded = (async () => {
+export const loadParameters = async () => {
     if (process.env.CLOUD && process.env.CLOUD === "aws") {
         try {
             if ( !process.env.REGION ){
@@ -39,4 +39,4 @@ export const parametersLoaded = (async () => {
             console.error(error.message)
         }
     }
-})();
+};
