@@ -1,11 +1,13 @@
+import { parametersLoaded } from "./cloud.js"
+
+await parametersLoaded
+
 import express from 'express';
 import { createServer } from 'node:http'
 import multer from 'multer'
-import { signUrl } from "./managerS3.js"
-import { parametersLoaded } from "./cloud.js"
-import { testDbConnection } from "./testDb.js"
 
-await parametersLoaded
+import { signUrl } from "./managerS3.js"
+import { testDbConnection } from "./testDb.js"
 
 await testDbConnection()
 
