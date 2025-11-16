@@ -8,6 +8,8 @@ import { loadParameters } from "./cloud.js"
 loadParameters().then(async () => {
     let { signUrl, signUrls } = await import("./managerS3.js")
     let { testDbConnection } = await import("./testDb.js")
+    let { verifyBooking, confirmBooking } = await import("./bookingVerification.js")
+    let { sendVerificationEmail } = await import("./functions/email.js")
     await testDbConnection()
 
     startservice()
@@ -42,17 +44,11 @@ loadParameters().then(async () => {
 
         app.get('/api/rez541/v1/sign/folder/:folder/filename/:filename', signUrl)
 
-        // app.post('/api/rez541/v1/signurls', upload.none(), (req, res) => {
-        //     let { uris } = req.body
-        //     console.log(uris)
-        //     res.json({ "signedUrls": [
-        //         "url1",
-        //         "url2",
-        //         "url3"
-        //     ] })
-        // })
-
         app.post('/api/rez541/v1/signurls', upload.none(), signUrls)
+
+        app.post('/api/rez541/v1/verifybooking', upload.none(), verifyBooking, sendVerificationEmail)
+        
+        app.post('/api/rez541/v1/confirmbooking', confirmBooking)
 
         const PORT = process.env.PORT || 4000;
 

@@ -64,7 +64,7 @@ export const signUrl = async (req, res) => {
 // Sign multiple URLs
 export const signUrls = async (req, res) => {
     let { uris } = req.body
-    let signedUrls = []
+    let signedUrls = new Map()
     try {
         await connect(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
         for (let i = 0; i < uris.length; i++) {
@@ -76,14 +76,16 @@ export const signUrls = async (req, res) => {
                 console.log(result[0].signedUrl);
                 if (result[0].expiresAt > new Date()) {
                     // Signed URL is still valid
-                    signedUrls.push(result[0].signedUrl)
+                    signedUrls.set(key, result[0].signedUrl);
+                    // signedUrls.push(result[0].signedUrl)
                 } else {
                     console.log("Existing signed URL has expired. Generating new signed URL.");
                     const surl = await fsignUrl({ client, bucket: process.env.AWS_BUCKET, key });
                     result[0].signedUrl = surl;
                     result[0].expiresAt = new Date(Date.now() + 3600 * 5000);
                     await result[0].save();
-                    signedUrls.push(result[0].signedUrl)
+                    signedUrls.set(key, surl);
+                    // signedUrls.push(result[0].signedUrl)
                 }
             } else {
                 console.log("No existing signed URL found in database. Generating new signed URL.");
@@ -95,11 +97,12 @@ export const signUrls = async (req, res) => {
                     expiresAt: new Date(Date.now() + 3600 * 5000), // 5 hours from now
                 });
                 await surlObj.save();
-                signedUrls.push(surl)
+                signedUrls.set(key, surl);
+                // signedUrls.push(surl)
             }
 
         }
-        res.json({ "signedUrls": signedUrls })
+        res.json({ "signedUrls": Object.fromEntries(signedUrls) })
 
     } catch (error) {
         res.status(500).json({ "message": "Error signing URLs", "error": error.message })

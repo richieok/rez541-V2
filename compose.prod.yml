@@ -12,6 +12,7 @@ services:
       - CLOUD=aws
       - SSM_PARAMETER_PATH=/rez541/env/
       - REGION=us-east-1
+      - DOMAIN=residence541.com
     networks:
       - cosmosnet
     ports:
