@@ -18,12 +18,27 @@ services:
     ports:
       - 4000:4000
   frontend:
-      build: ./frontend
-      container_name: frontend
-      ports:
-        - 3000:3000
-      networks:
-        - cosmosnet
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - 3000:3000
+    networks:
+      - cosmosnet
+  web:
+    image: nginx:alpine
+    container_name: web
+    ports:
+      - 8080:80
+    volumes:
+      # Mount the NGINX configuration file
+      - ./web/prod/nginx.conf:/etc/nginx/nginx.conf:ro
+      # - ./nginx/html:/usr/share/nginx/html
+      - ./web/prod/logs:/var/log/nginx
+    networks:
+      - cosmosnet
+    depends_on:
+      - backend
+      - frontend
 networks:
   cosmosnet:
     driver: bridge

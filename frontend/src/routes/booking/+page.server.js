@@ -5,10 +5,11 @@ export const actions = {
             const firstname = formData.get('firstname');
             const lastname = formData.get('lastname');
             const email = formData.get('email');
+            const phone = formData.get('phone');
             const checkIn = formData.get('check-in');
             const checkOut = formData.get('check-out');
-            console.log({ firstname, lastname, email, checkIn, checkOut });
-            const newBooking = { firstname, lastname, email, checkIn, checkOut };
+            const newBooking = { firstname, lastname, email, phone, checkIn, checkOut };
+            console.log(newBooking);
             const res = await fetch('http://backend:4000/api/rez541/v1/verifybooking', {
                 method: 'POST',
                 headers: {

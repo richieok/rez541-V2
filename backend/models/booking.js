@@ -14,6 +14,17 @@ const BookingSchema = new Schema(
             required: true,
             // Example: "example@example.com"
         },
+        phone: {
+            type: String,
+            required: true,
+            // Example: "000000000000"
+        },
+        // roomType: {
+        //     type: Schema.Types.ObjectId,
+        //     ref: 'RoomType',
+        //     required: true,
+        //     // Reference to the RoomType model
+        // },
         checkIn: {
             type: Date,
             required: true,

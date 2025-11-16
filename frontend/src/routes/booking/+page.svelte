@@ -20,6 +20,8 @@
                 <input type="text" name="lastname" placeholder="Lastname" />
                 <label for="email">Email</label>
                 <input type="email" name="email" placeholder="Email" />
+                <label for="phone">Phone</label>
+                <input type="tel" name="phone" placeholder="Phone" />
                 <label for="check-in">Check-in Date</label>
                 <input
                     type="date"

@@ -50,5 +50,5 @@ export const confirmBooking = async (req, res) => {
   booking.isVerified = true
   await booking.save()
   // Send email to GM
-  return res.json({ message: "Booking saved" })
+  return res.json({ message: "Booking saved successfully" })
 }
