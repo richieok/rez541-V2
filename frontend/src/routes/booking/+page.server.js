@@ -1,5 +1,5 @@
 export const actions = {
-    startBooking: async ({ request }) => {
+    default: async ({ request }) => {
         let message = "Nothing done"
         try {
             const formData = await request.formData();
