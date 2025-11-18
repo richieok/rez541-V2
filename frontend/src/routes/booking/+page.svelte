@@ -12,7 +12,7 @@
 <div class="page">
     <h1>Booking</h1>
     {#if dispForm}
-        <form action="?/startBooking" method="post">
+        <form action="?/startBooking=1" method="post">
             <div class="inputs">
                 <label for="firstname">Firstname</label>
                 <input type="text" name="firstname" placeholder="Firstname" />
