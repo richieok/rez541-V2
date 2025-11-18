@@ -29,10 +29,10 @@ export async function sendVerificationEmail(req, res) {
         if (!process.env.ACCESS_TOKEN_ZOHO_MAIL) {
             process.env.ACCESS_TOKEN_ZOHO_MAIL = await refreshAccessToken()
         }
-        console.log(`process.env.ACCESS_TOKEN_ZOHO_MAIL: ${process.env.ACCESS_TOKEN_ZOHO_MAIL}`);
+        // console.log(`process.env.ACCESS_TOKEN_ZOHO_MAIL: ${process.env.ACCESS_TOKEN_ZOHO_MAIL}`);
         
         let { email, token } = req;
-        console.log(email, token);
+        // console.log(email, token);
         
         let subject = "Please verify your booking at Residence 541"
         let body = `<h2>Thank you for choosing Residence 541!</h2>

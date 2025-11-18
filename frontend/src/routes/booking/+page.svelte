@@ -38,6 +38,9 @@
             <button type="submit">Book Now</button>
         </form>
     {/if}
+    {#if form?.message}
+        <h2>{form.message}</h2>
+    {/if}
 </div>
 
 <style>
