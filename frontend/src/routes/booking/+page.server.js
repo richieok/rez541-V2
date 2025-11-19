@@ -1,7 +1,7 @@
 export const actions = {
     default: async ({ request }) => {
-        console.log('Origin:', request.headers.get('origin'));
-        console.log('Host:', request.headers.get('host'));
+        // console.log('Origin:', request.headers.get('origin'));
+        // console.log('Host:', request.headers.get('host'));
         let message = "Nothing done"
         try {
             const formData = await request.formData();
