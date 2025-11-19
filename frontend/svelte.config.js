@@ -4,7 +4,13 @@ export default {
 	kit: {
 		adapter: adapter(),
 		csrf: {
-			checkOrigin: false
+			checkOrigin: true,
+			trustedOrigins: [
+				"www.residence541.com",
+				"residence541.com",
+				// "localhost:5173",
+				// "127.0.0.1:5173"
+			]
 		}
 		
 	}
