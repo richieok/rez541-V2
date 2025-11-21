@@ -13,19 +13,19 @@ export const actions = {
             const checkOut = formData.get('check-out');
             const newBooking = { firstname, lastname, email, phone, checkIn, checkOut };
             console.log(newBooking);
-            // const res = await fetch('http://backend:4000/api/rez541/v1/verifybooking', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify({ newBooking })
-            // })
-            // const data = await res.json();
-            // if (!res.ok) {
-            //     throw new Error(data.message || 'Failed to start booking.');
-            // }
-            // console.log('Booking response:', data);
-            // message = "Booking initiated successfully. Please check your email to verify your booking."
+            const res = await fetch('http://backend:4000/api/rez541/v1/verifybooking', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ newBooking })
+            })
+            const data = await res.json();
+            if (!res.ok) {
+                throw new Error(data.message || 'Failed to start booking.');
+            }
+            console.log('Booking response:', data);
+            message = "Booking initiated successfully. Please check your email to verify your booking."
         } catch (error) {
             return {
                 success: false, error: error.message
