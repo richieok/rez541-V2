@@ -19,9 +19,12 @@ const client = new S3Client(options);
 
 export const signUrl = async (req, res) => {
     try {
-        const { folder, filename } = req.params
-        const key = `${folder}/${filename}`
-        console.log(key)
+        const uriString = req.query.path;
+        if (!uriString) {
+            return res.status(400).json({ "message": "Missing path query parameter" });
+        }
+        const key = decodeURIComponent(uriString);
+
         await connect(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
         const result = await SignedUrl.findByImageUri(key)
         if (result && result.length > 0) {
@@ -51,7 +54,7 @@ export const signUrl = async (req, res) => {
             });
             await surlObj.save();
             await disconnect();
-            res.send(surl);
+            res.send({surl});
         }
 
     } catch (error) {

@@ -2,8 +2,6 @@ import express from 'express';
 import { createServer } from 'node:http'
 import multer from 'multer'
 import { loadParameters } from "./cloud.js"
-// import { signUrl } from "./managerS3.js"
-// import { testDbConnection } from "./testDb.js"
 
 loadParameters().then(async () => {
     let { signUrl, signUrls } = await import("./managerS3.js")
@@ -42,7 +40,7 @@ loadParameters().then(async () => {
         // })
         // app.get('/api/rez541/v1/sign/folder/:folder/filename/:filename', signUrl)
 
-        app.get('/api/rez541/v1/sign/folder/:folder/filename/:filename', signUrl)
+        app.get('/api/rez541/v1/signurl', signUrl)
 
         app.post('/api/rez541/v1/signurls', upload.none(), signUrls)
 
