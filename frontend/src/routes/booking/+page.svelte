@@ -1,8 +1,15 @@
 <script>
     import { browser } from "$app/environment";
 
-    let { form } = $props();
-    let dispForm = true;
+    let { form, data } = $props();
+
+    let { rooms, roomId } = data;
+    let selected = $state();
+    let dispForm = $state(true);
+
+    if (browser){
+        selected = roomId ? parseInt(roomId) : ""
+    }
 
     if (browser && form?.success) {
         dispForm = false;
@@ -14,6 +21,13 @@
     {#if dispForm}
         <form method="post">
             <div class="inputs">
+                <label for="roomType">Room Type</label>
+                <select name="roomType" required bind:value={selected}>
+                    <option value="" disabled>Select Room Type</option>
+                    {#each rooms as room}
+                        <option value={room.id}>{room.name}</option>
+                    {/each}
+                </select>
                 <label for="firstname">Firstname</label>
                 <input type="text" name="firstname" placeholder="Firstname" />
                 <label for="lastname">Lastname</label>
@@ -55,6 +69,12 @@
         display: grid;
         grid-template-columns: 100px 1fr;
         gap: 1rem;
+    }
+    select {
+        padding: 0.5rem;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
     }
     input {
         padding: 0.5rem;

@@ -4,10 +4,16 @@ import multer from 'multer'
 import { loadParameters } from "./cloud.js"
 
 loadParameters().then(async () => {
+    //Set public image expiration time
+    if (!process.env.PUBLIC_IMG_EXP) {
+        process.env.PUBLIC_IMG_EXP = 5
+    }
+    console.log(`Public image expiration time set to ${process.env.PUBLIC_IMG_EXP} hours`)
     let { signUrl, signUrls } = await import("./managerS3.js")
     let { testDbConnection } = await import("./testDb.js")
     let { verifyBooking, confirmBooking } = await import("./bookingVerification.js")
     let { sendVerificationEmail } = await import("./functions/email.js")
+    let { getAllRoomTypes, getRoomTypeById } = await import("./db/rooms.js")
     await testDbConnection()
 
     startservice()
@@ -45,8 +51,12 @@ loadParameters().then(async () => {
         app.post('/api/rez541/v1/signurls', upload.none(), signUrls)
 
         app.post('/api/rez541/v1/verifybooking', upload.none(), verifyBooking, sendVerificationEmail)
-        
+
         app.post('/api/rez541/v1/confirmbooking', confirmBooking)
+
+        app.get('/api/rez541/v1/getrooms', getAllRoomTypes);
+
+        app.get('/api/rez541/v1/getroombyid/id/:id', getRoomTypeById);
 
         const PORT = process.env.PORT || 4000;
 

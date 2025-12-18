@@ -11,14 +11,15 @@ const retrieveSignedUrls = async (urls) => {
         return data.signedUrls;
     } else {
         console.error('Failed to retrieve signed URLs:', res.statusText);
-        return [];
+        return {};
     }
 }
 
 const urls = [
-    "public/3-bed-suite/bathroom-2.jpg",
-    "public/3-bed-suite/closet-3-bed.jpg",
-    "public/3-bed-suite/kitchen-3-bed.jpg"
+    "public/3-bed-suite/living-room-3-bed.jpg",
+    "public/exterior/block1-view-800w.jpg",
+    "public/3-bed-suite/kitchen-3-bed.jpg",
+    "public/2-bedroom-suite/bedroom-gf-800w.jpg"
 ]
 
 export const load = async () => {

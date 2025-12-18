@@ -1,17 +1,27 @@
-async function getPublicUrl(file) {
-    let res = await fetch(`http://backend:4000/api/rez541/v1/sign/folder/public/filename/${file}`)
-    if (!res.ok){
-        console.log("error: ", res.status)
-        return null
-    }
-    let result = await res.text();
-    return result
-}
+import { retrieveSignedUrls } from "$lib/server/signing.js"
+import { getRooms } from "$lib/server/bookingApp.js"
+
+// async function getRooms() {
+//     let res = await fetch(`http://backend:4000/api/rez541/v1/getrooms`)
+//     if (!res.ok){
+//         console.log("error: ", res.status)
+//         return []
+//     }
+//     const rooms = await res.json()
+//     //sign urls 
+//     return rooms
+// }
 
 export async function load() {
-    const resp = await getPublicUrl("joseph-bobadilla-i3DxNe0ktZI-unsplash.jpg")
+    let rooms = await getRooms()
+    console.log("Rooms count:", rooms.length)
+    // for (let room of rooms) {
+    //     const signedUrls = await retrieveSignedUrls(room.imageList)
+    //     // console.log(signedUrls)
+    //     room.signedUrls = signedUrls
+    // }
     // const ans = await resp.json()
     // console.log(ans);
     
-    return {name: "james"}
+    return {"rooms": rooms}
 }

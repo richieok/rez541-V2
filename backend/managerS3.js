@@ -12,7 +12,7 @@ let options = {
 
 const fsignUrl = async ({ client, bucket, key }) => {
     const command = new GetObjectCommand({ Bucket: bucket, Key: key });
-    return getSignedUrl(client, command, { expiresIn: 18000 }); // 5 hours
+    return getSignedUrl(client, command, { expiresIn: 3600 * process.env.PUBLIC_IMG_EXP });
 }
 
 const client = new S3Client(options);
@@ -54,7 +54,7 @@ export const signUrl = async (req, res) => {
             });
             await surlObj.save();
             await disconnect();
-            res.send({surl});
+            res.send({ surl });
         }
 
     } catch (error) {
@@ -67,16 +67,18 @@ export const signUrl = async (req, res) => {
 // Sign multiple URLs
 export const signUrls = async (req, res) => {
     let { uris } = req.body
+    console.log("signUrls( req, res )")
+    console.log(uris)
     let signedUrls = new Map()
     try {
         await connect(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
         for (let i = 0; i < uris.length; i++) {
             const key = uris[i]
-            console.log(key)
+            // console.log(key)
             const result = await SignedUrl.findByImageUri(key)
             if (result && result.length > 0) {
                 console.log("Found existing signed URL in database.");
-                console.log(result[0].signedUrl);
+                // console.log(result[0].signedUrl);
                 if (result[0].expiresAt > new Date()) {
                     // Signed URL is still valid
                     signedUrls.set(key, result[0].signedUrl);
@@ -84,11 +86,10 @@ export const signUrls = async (req, res) => {
                 } else {
                     console.log("Existing signed URL has expired. Generating new signed URL.");
                     const surl = await fsignUrl({ client, bucket: process.env.AWS_BUCKET, key });
+                    result[0].expiresAt = new Date(Date.now() + (3600000 * process.env.PUBLIC_IMG_EXP - 1000));
                     result[0].signedUrl = surl;
-                    result[0].expiresAt = new Date(Date.now() + 3600 * 5000);
                     await result[0].save();
                     signedUrls.set(key, surl);
-                    // signedUrls.push(result[0].signedUrl)
                 }
             } else {
                 console.log("No existing signed URL found in database. Generating new signed URL.");
@@ -97,17 +98,58 @@ export const signUrls = async (req, res) => {
                     imageUri: key,
                     imagePath: key,
                     signedUrl: surl,
-                    expiresAt: new Date(Date.now() + 3600 * 5000), // 5 hours from now
+                    expiresAt: new Date(Date.now() + (3600000 * process.env.PUBLIC_IMG_EXP - 1000)),
                 });
                 await surlObj.save();
                 signedUrls.set(key, surl);
-                // signedUrls.push(surl)
             }
 
         }
+        // console.log("managerS3", { "signedUrls": Object.fromEntries(signedUrls) })
         res.json({ "signedUrls": Object.fromEntries(signedUrls) })
 
     } catch (error) {
         res.status(500).json({ "message": "Error signing URLs", "error": error.message })
     }
+}
+
+export const retrieveSignedUrls = async (uris) => {
+    if (uris.length === 0) {
+        return {}
+    }
+    let signedUrls = new Map()
+    for (let i = 0; i < uris.length; i++) {
+        const key = uris[i]
+        // console.log(key)
+        const result = await SignedUrl.findByImageUri(key)
+        if (result && result.length > 0) {
+            console.log("Found existing signed URL in database.");
+            // console.log(result[0].signedUrl);
+            if (result[0].expiresAt > new Date()) {
+                // Signed URL is still valid
+                signedUrls.set(key, result[0].signedUrl);
+                // signedUrls.push(result[0].signedUrl)
+            } else {
+                console.log("Existing signed URL has expired. Generating new signed URL.");
+                const surl = await fsignUrl({ client, bucket: process.env.AWS_BUCKET, key });
+                result[0].expiresAt = new Date(Date.now() + (3600000 * process.env.PUBLIC_IMG_EXP - 1000));
+                result[0].signedUrl = surl;
+                await result[0].save();
+                signedUrls.set(key, surl);
+            }
+        } else {
+            console.log("No existing signed URL found in database. Generating new signed URL.");
+            const surl = await fsignUrl({ client, bucket: process.env.AWS_BUCKET, key });
+            const surlObj = new SignedUrl({
+                imageUri: key,
+                imagePath: key,
+                signedUrl: surl,
+                expiresAt: new Date(Date.now() + (3600000 * process.env.PUBLIC_IMG_EXP - 1000)),
+            });
+            await surlObj.save();
+            signedUrls.set(key, surl);
+        }
+
+    }
+    return Object.fromEntries(signedUrls)
 }

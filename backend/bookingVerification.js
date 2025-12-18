@@ -22,7 +22,7 @@ export const verifyBooking = async (req, res, next) => {
     const booking = new Booking(newBooking)
     await booking.save()
     console.log("Booking saved");
-    
+
     disconnect()
     req.token = token
     req.email = newBooking.email

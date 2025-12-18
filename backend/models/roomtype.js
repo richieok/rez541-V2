@@ -2,6 +2,13 @@ import { model, Schema } from 'mongoose'
 
 const roomTypeSchema = new Schema(
     {
+        id: {
+            type: Number,
+            required: true,
+            unique: true,
+            index: true,
+            // Example: 5
+        },
         name: {
             type: String,
             required: true,
@@ -32,6 +39,11 @@ const roomTypeSchema = new Schema(
             type: Date,
             default: Date.now,
             index: true,
+        },
+        imageList: {
+            type: [String],
+            required: false,
+            // Example: ["public/folder/img1.jpg", "public/folder/img2.jpg"]
         }
     },
     {

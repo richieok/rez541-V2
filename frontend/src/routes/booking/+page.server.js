@@ -1,3 +1,5 @@
+import { getRooms } from "$lib/server/bookingApp.js"
+
 export const actions = {
     default: async ({ request }) => {
         // console.log('Origin:', request.headers.get('origin'));
@@ -33,4 +35,11 @@ export const actions = {
         }
         return { success: true, message }
     }
+}
+
+export async function load({url}) {
+    const roomId = url.searchParams.get('roomId');
+    let rooms = await getRooms()
+    roomId ? console.log("Room ID:", roomId) : console.log("No Room ID provided");
+    return { "rooms": rooms, "roomId": roomId };
 }
