@@ -15,7 +15,7 @@ export async function POST({ request }) {
     let { uris } = await request.json()
     console.log('Received URIs:', uris);
     // console.log(uris)
-    const res = await fetch('http://backend:4000/api/rez541/v1/signurls', {
+    const res = await fetch('http://backend:4000/api/rez541/v1.1/signurls', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

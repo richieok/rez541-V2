@@ -15,7 +15,7 @@ export const actions = {
             const checkOut = formData.get('check-out');
             const newBooking = { firstname, lastname, email, phone, checkIn, checkOut };
             console.log(newBooking);
-            const res = await fetch('http://backend:4000/api/rez541/v1/verifybooking', {
+            const res = await fetch('http://backend:4000/api/rez541/v1.1/verifybooking', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

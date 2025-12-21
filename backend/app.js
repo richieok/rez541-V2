@@ -1,19 +1,23 @@
 import express from 'express';
+import { connect } from "mongoose"
 import { createServer } from 'node:http'
 import multer from 'multer'
 import { loadParameters } from "./cloud.js"
+import { DB_URI } from "./initDB.js"
+import { sendBuild, setBuild } from "./db/build.js"
 
 loadParameters().then(async () => {
+    await connect(DB_URI)
     //Set public image expiration time
     if (!process.env.PUBLIC_IMG_EXP) {
         process.env.PUBLIC_IMG_EXP = 5
     }
     console.log(`Public image expiration time set to ${process.env.PUBLIC_IMG_EXP} hours`)
-    let { signUrl, signUrls } = await import("./managerS3.js")
+    let { signUrl, buildSignedUrlsObj } = await import("./managerS3.js")
     let { testDbConnection } = await import("./testDb.js")
     let { verifyBooking, confirmBooking } = await import("./bookingVerification.js")
     let { sendVerificationEmail } = await import("./functions/email.js")
-    let { getAllRoomTypes, getRoomTypeById } = await import("./db/rooms.js")
+    let { buildRoomsArray, buildRoomById } = await import("./db/rooms.js")
     await testDbConnection()
 
     startservice()
@@ -29,6 +33,7 @@ loadParameters().then(async () => {
 
         app.use(express.urlencoded({ extended: true }))
         app.use(express.json());
+        app.use(setBuild)
 
 
         app.get('/api', (req, res) => {
@@ -39,24 +44,24 @@ loadParameters().then(async () => {
             res.json({ "message": "Test endpoint", "status": "true", "test": process.env.TEST || 'NOT_FOUND' });
         });
 
-        // app.get('/api/rez541/v1/sign/folder/:folder/filename/:filename', (req, res)=>{
-        //     const { folder, filename } = req.params
-        //     console.log(`folder: ${folder}\nfilename: ${filename}`)
-        //     res.json({ "message": "publicSignUrl endpoint", "status": "true" })
-        // })
-        // app.get('/api/rez541/v1/sign/folder/:folder/filename/:filename', signUrl)
-
         app.get('/api/rez541/v1/signurl', signUrl)
 
-        app.post('/api/rez541/v1/signurls', upload.none(), signUrls)
+        app.get('/api/rez541/v1.1/signurl', signUrl)
 
-        app.post('/api/rez541/v1/verifybooking', upload.none(), verifyBooking, sendVerificationEmail)
+        app.post('/api/rez541/v1.1/signurls', upload.none(), buildSignedUrlsObj, sendBuild)
 
-        app.post('/api/rez541/v1/confirmbooking', confirmBooking)
+        app.post('/api/rez541/v1.1/verifybooking', upload.none(), verifyBooking, sendVerificationEmail)
 
-        app.get('/api/rez541/v1/getrooms', getAllRoomTypes);
+        app.post('/api/rez541/v1.1/confirmbooking', confirmBooking)
 
-        app.get('/api/rez541/v1/getroombyid/id/:id', getRoomTypeById);
+        app.get('/api/rez541/v1.1/getrooms', buildRoomsArray, sendBuild);
+
+        app.get('/api/rez541/v1.1/getroombyid/id/:id', buildRoomById, sendBuild);
+
+        app.use((err, req, res, next) => {
+            console.error(err.stack);
+            res.status(500).json({ message: 'Internal Server Error', error: err.message });
+        })
 
         const PORT = process.env.PORT || 4000;
 

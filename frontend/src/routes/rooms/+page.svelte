@@ -5,65 +5,51 @@
 
     const { data } = $props();
     let rooms = $state(data.rooms);
-    $inspect(rooms, "rooms in +page.svelte");
 
-    async function onPageLoad() {
-        try {
-            for (let room of rooms) {
-                console.log($state.snapshot(room.imageList));
-                const res = await fetch("/app/signurls", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        uris: room.imageList,
-                    }),
-                });
-                if (res.ok) {
-                    console.log("res.ok");
-                    const signedUrlsObj = await res.json();
-                    room.signedUrls = signedUrlsObj;
-                } else {
-                    console.log(res.status);
-                    let { error } = await res.json();
-                    console.log(`error: ${error}`);
-                }
-            }
-            rooms.forEach((room) => {
-                console.log($state.snapshot(room.imageList));
-                // let images = room.imageList.map( img => img.length )
-                let signdImgList = room.imageList.map((img) => {
-                    return room.signedUrls[img];
-                });
-                room.signdImgList = signdImgList;
-                console.log(signdImgList);
-            });
-            console.log($state.snapshot(rooms));
-        } catch (error) {
-            console.log("Error");
-            throw new Error("onPageLoad function failed");
+    async function signImages(imgArray = []) {
+        let res = await fetch("/app/signurls", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                uris: imgArray,
+            }),
+        });
+        if (!res.ok) {
+            console.error("Failed to fetch signed URLs:", res.statusText);
+            return {};
+        }
+        let result = await res.json();
+        return result;
+    }
+
+    async function procRooms(rooms) {
+        for (let room of rooms) {
+            room.signedUrlObj = await signImages(room.imageList);
         }
     }
 
     onMount(async () => {
-        const id = setTimeout(async () => {
-            await onPageLoad();
-            clearTimeout(id);
-        }, 2000);
-        return () => clearTimeout(id);
+        console.log("Spa page data:", data);
+        await procRooms(rooms);
+        console.log($state.snapshot(rooms));
+        console.log(
+            rooms[0].imageList.map((img) => rooms[0].signedUrlObj[img]),
+        );
     });
 </script>
 
 <svelte:head><title>Bookings</title></svelte:head>
-<button onclick={onPageLoad}>CLick</button>
 <div class="room-wrapper fade-in">
     {#each rooms as aptInfo}
         <RoomCards
             name={aptInfo.name}
             price={aptInfo.pricePerNight}
             id={aptInfo.id}
-            images={aptInfo.signdImgList}
+            images={aptInfo.signedUrlObj
+                ? aptInfo.imageList.map((img) => aptInfo.signedUrlObj[img])
+                : []}
         />
     {/each}
 </div>

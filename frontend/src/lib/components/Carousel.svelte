@@ -38,7 +38,7 @@
                     : Math.min(cards.length - 1, currentIndex + 1);
 
             currentIndex = newIndex;
-            console.log(newIndex);
+            // console.log(newIndex);
 
             // Scroll to the new card
             carousel.scrollTo({

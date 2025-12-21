@@ -3,7 +3,7 @@ const confirmationMessage = 'Booking confirmed successfully'
 export const load = async ({ url }) => {
     const bookingToken = url.searchParams.get('token') || null;
     try {
-        const response = await fetch(`http://backend:4000/api/rez541/v1/confirmbooking`,
+        const response = await fetch(`http://backend:4000/api/rez541/v1.1/confirmbooking`,
             {
                 method: 'POST',
                 headers: {

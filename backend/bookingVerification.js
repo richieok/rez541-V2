@@ -1,5 +1,3 @@
-import { connect, disconnect } from "mongoose"
-import { DB_URI } from "./initDB.js"
 import { Booking } from "./models/booking.js"
 
 function generateUrlSafeToken(byteLength = 32) {
@@ -16,21 +14,18 @@ export const verifyBooking = async (req, res, next) => {
   }
   console.log(newBooking);
   try {
-    await connect(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
     const token = generateUrlSafeToken()
     newBooking.token = token
     const booking = new Booking(newBooking)
     await booking.save()
     console.log("Booking saved");
 
-    disconnect()
     req.token = token
     req.email = newBooking.email
     // Call verification email middleware
     next()
   } catch (error) {
     console.error('Error verifying booking\n', error.message);
-    disconnect()
     res.status(500).json({ message: 'Internal server error' })
   }
 }
@@ -38,9 +33,7 @@ export const verifyBooking = async (req, res, next) => {
 export const confirmBooking = async (req, res) => {
   let { bookingToken } = req.body
   console.log(bookingToken);
-  await connect(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
   const booking = await Booking.findOne({ token: bookingToken })
-  console.log(booking);
   if (!booking) {
     return res.status(404).json({ message: 'Booking not found' })
   }

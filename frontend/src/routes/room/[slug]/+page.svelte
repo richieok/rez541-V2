@@ -8,12 +8,12 @@
 <svelte:head><title>{room.name}</title></svelte:head>
 <div class="page-wrapper fade-in">
     <div class="gallery">
-        {#if room.imageList.length > 0}
-        {#each room.imageList as uri}
-        <div>
-            <img src={room.signedUrls[uri]} alt="" />
-        </div>
-        {/each}
+        {#if room?.imageList.length > 0}
+            {#each room.imageList as uri}
+                <div>
+                    <img src={room.signedUrls[uri]} alt="" />
+                </div>
+            {/each}
         {/if}
     </div>
     <FixedBar>
@@ -33,7 +33,7 @@
     }
     .gallery {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(300px, 450px));
         gap: 1rem;
     }
     .gallery img {

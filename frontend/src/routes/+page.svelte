@@ -1,23 +1,24 @@
 <script>
     import Hero from "./Hero.svelte";
     let {data} = $props()
+    let {signedUrls} = data
     // console.log(data.signedUrls)
 </script>
 
 <svelte:head><title>Home</title></svelte:head>
-<Hero src="{data.signedUrls["public/2-bedroom-suite/bedroom-gf-800w.jpg"]}"/>
+<Hero src="{signedUrls["public/2-bedroom-suite/bedroom-gf-800w.jpg"]}"/>
 
 <div class="section">
     <div class="x-layout">
         <div class="img-frame pos-1">
             <img
-                src="{data.signedUrls["public/3-bed-suite/living-room-3-bed.jpg"]}"
+                src="{signedUrls["public/3-bed-suite/living-room-3-bed.jpg"]}"
                 alt=""
             />
         </div>
         <div class="img-frame pos-3">
             <img
-                src="{data.signedUrls["public/exterior/block1-view-800w.jpg"]}"
+                src="{signedUrls["public/exterior/block1-view-800w.jpg"]}"
                 alt=""
             />
         </div>

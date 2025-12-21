@@ -2,29 +2,40 @@
     import { page } from "$app/state";
     import { browser } from "$app/environment";
 
-    function onclick(evt) {
-        console.log("a click event");
-        let menuToggle = document.querySelector("#menu-toggle");
-        if (menuToggle?.checked) {
-            menuToggle.checked = false;
-        }
-    }
+    let menuToggle;
+    let navList;
 
     if (browser) {
-        document.getElementById("navlist")?.addEventListener("click", onclick);
         document.addEventListener("scroll", (event) => {
-            let menuToggle = document.querySelector("#menu-toggle");
             if (menuToggle?.checked) {
                 menuToggle.checked = false;
             }
         });
-        console.log(document.querySelector(".nav-container"));
-        document.querySelector(".nav-container")?.addEventListener("blur", event => {
-            console.log("nav container blur event");
-        })
-        document.querySelector(".nav-container")?.addEventListener("focus", event => {
-            console.log("nav container focus event");
-        })
+        // Close menu when clicking outside
+        document.addEventListener("click", (event) => {
+            let navContainer = document.querySelector(".nav-container");
+
+            // Clicked outside navList
+            if (
+                menuToggle !== event.target &&
+                menuToggle?.checked &&
+                !navList.contains(event.target)
+            ) {
+                console.log("navList does not contain target");
+                menuToggle.checked = false;
+            }
+            // Clicked within navList
+            if (navList.contains(event.target)) {
+                if (menuToggle?.checked) {
+                    menuToggle.checked = false;
+                }
+            }
+            if (event.target === menuToggle) {
+                // Clicking the menu toggle
+                console.log("clicked menu toggle");
+                menuToggle.checked = !menuToggle.checked;
+            }
+        });
     }
 </script>
 
@@ -36,14 +47,14 @@
     </div>
     <div class="nav-container">
         <div id="menu">
-            <input type="checkbox" id="menu-toggle" />
+            <input type="checkbox" bind:this={menuToggle} id="menu-toggle" />
             <label for="menu-toggle" class="menu-toggle-label">
                 <span class="line line1"></span>
                 <span class="line line2"></span>
                 <span class="line line3"></span>
             </label>
         </div>
-        <ul class="nav playfair-display-name" id="navlist">
+        <ul class="nav playfair-display-name" bind:this={navList}>
             <li>
                 <a href="/" aria-current={page.url.pathname === "/"}>Home</a>
             </li>
