@@ -3,10 +3,11 @@ import { connect } from "mongoose"
 import { createServer } from 'node:http'
 import multer from 'multer'
 import { loadParameters } from "./cloud.js"
-import { DB_URI } from "./initDB.js"
 import { sendBuild, setBuild } from "./db/build.js"
 
 loadParameters().then(async () => {
+    let { DB_URI } = await import("./initDB.js")
+    // console.log(DB_URI)
     await connect(DB_URI)
     //Set public image expiration time
     if (!process.env.PUBLIC_IMG_EXP) {
