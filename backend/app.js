@@ -17,7 +17,7 @@ loadParameters().then(async () => {
     let { signUrl, buildSignedUrlsObj } = await import("./managerS3.js")
     let { testDbConnection } = await import("./testDb.js")
     let { verifyBooking, confirmBooking } = await import("./bookingVerification.js")
-    let { sendVerificationEmail } = await import("./functions/email.js")
+    let { sendVerificationEmail, sendManagerNotificationEmail } = await import("./functions/email.js")
     let { buildRoomsArray, buildRoomById } = await import("./db/rooms.js")
     await testDbConnection()
 
@@ -53,7 +53,7 @@ loadParameters().then(async () => {
 
         app.post('/api/rez541/v1.1/verifybooking', upload.none(), verifyBooking, sendVerificationEmail)
 
-        app.post('/api/rez541/v1.1/confirmbooking', confirmBooking)
+        app.post('/api/rez541/v1.1/confirmbooking', confirmBooking, sendManagerNotificationEmail, sendBuild)
 
         app.get('/api/rez541/v1.1/getrooms', buildRoomsArray, sendBuild);
 

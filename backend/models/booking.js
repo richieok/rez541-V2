@@ -1,4 +1,5 @@
 import { model, Schema } from 'mongoose'
+import { type } from 'node:os';
 
 const BookingSchema = new Schema(
     {
@@ -9,6 +10,16 @@ const BookingSchema = new Schema(
             index: true,
             // Example: "abc123xyz456"
         },
+        firstName: {
+            type: String,
+            required: true,
+            // Example: "John"
+        },
+        lastName: {
+            type: String,
+            required: true,
+            // Example: "Doe"
+        },
         email: {
             type: String,
             required: true,
@@ -18,6 +29,10 @@ const BookingSchema = new Schema(
             type: String,
             required: true,
             // Example: "000000000000"
+        },
+        roomId: {
+            type: Number,
+            required: true
         },
         // roomType: {
         //     type: Schema.Types.ObjectId,

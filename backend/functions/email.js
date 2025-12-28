@@ -7,6 +7,8 @@ const proto = process.env.DOMAIN ? "https" : "http"
 let confirmUrl = `${proto}://${domain}/booking-conf?token=`
 // console.log(`confirmUrl: ${confirmUrl}`)
 
+const TEST_EMAIL = "richie.okoro@gmail.com";
+
 async function refreshAccessToken() {
     const refreshToken = process.env.REFRESH_TOKEN;
     const clientId = process.env.CLIENT_ID;
@@ -75,3 +77,54 @@ export async function sendVerificationEmail(req, res) {
 
 }
 
+export const sendManagerNotificationEmail = async (req, res, next) => {
+    const booking = req.locals.booking
+    try {
+        if (!process.env.ACCESS_TOKEN_ZOHO_MAIL) {
+            process.env.ACCESS_TOKEN_ZOHO_MAIL = await refreshAccessToken()
+        }
+        let subject = "New Booking Verified at Residence 541"
+        let body = `<h2>New Booking Verified</h2>
+    <p>A new booking has been verified with the following details:</p>
+    <ul>
+      <li>Name: ${booking.firstName} ${booking.lastName}</li>
+      <li>Email: ${booking.email}</li>
+      <li>Phone: ${booking.phone}</li>
+      <li>Check-In: ${booking.checkIn}</li>
+      <li>Check-Out: ${booking.checkOut}</li>
+    </ul>`
+        let managerEmail = process.env.MANAGER_EMAIL || TEST_EMAIL;
+        let tries = 3;
+        while (tries > 0) {
+            let response = await fetch(maiiApi, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Zoho-oauthtoken ${process.env.ACCESS_TOKEN_ZOHO_MAIL}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "fromAddress": fromAddress,
+                    "toAddress": managerEmail,
+                    "subject": subject,
+                    "content": body
+                })
+            });
+            if (!response.ok) {
+                next(new Error(`Failed to send email`));
+            }
+            const jsonData = await response.json();
+            if (jsonData.data.errorCode === "INVALID_OAUTHTOKEN") {
+                console.log('Access token expired, refreshing token...');
+                process.env.ACCESS_TOKEN_ZOHO_MAIL = await refreshAccessToken();
+            } else {
+                console.log('Manager notification email sent successfully:', jsonData);
+                break;
+            }
+            tries -= 1;
+        }
+        next()
+    } catch (error) {
+        console.error('Failed to send manager notification email:', error.message)
+        next(error)
+    }
+}

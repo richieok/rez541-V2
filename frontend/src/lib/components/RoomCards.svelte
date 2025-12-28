@@ -20,7 +20,6 @@
         background-color: lightgray;
         font-family: "Poppins", sans-serif;
 
-        > h1,
         h2,
         h3,
         p {
@@ -28,6 +27,7 @@
         }
         h2 {
             font-weight: 400;
+            text-transform: capitalize;
         }
         h3 {
             font-weight: 400;

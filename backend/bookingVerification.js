@@ -30,7 +30,7 @@ export const verifyBooking = async (req, res, next) => {
   }
 }
 
-export const confirmBooking = async (req, res) => {
+export const confirmBooking = async (req, res, next) => {
   let { bookingToken } = req.body
   console.log(bookingToken);
   const booking = await Booking.findOne({ token: bookingToken })
@@ -42,6 +42,9 @@ export const confirmBooking = async (req, res) => {
   }
   booking.isVerified = true
   await booking.save()
+  req.locals.booking = booking.toObject()
   // Send email to GM
-  return res.json({ message: "Booking saved successfully" })
+  // return res.json({ message: "Booking saved successfully" })
+  req.build.bookingMessage = "Booking confirmed successfully"
+  next()
 }

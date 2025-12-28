@@ -4,6 +4,7 @@
 
     let menuToggle;
     let navList;
+    let navContainer
 
     if (browser) {
         document.addEventListener("scroll", (event) => {
@@ -13,29 +14,17 @@
         });
         // Close menu when clicking outside
         document.addEventListener("click", (event) => {
-            let navContainer = document.querySelector(".nav-container");
-
-            // Clicked outside navList
-            if (
-                menuToggle !== event.target &&
-                menuToggle?.checked &&
-                !navList.contains(event.target)
-            ) {
-                console.log("navList does not contain target");
+            // console.log(event.target);
+            if (menuToggle !== event.target) {
                 menuToggle.checked = false;
             }
-            // Clicked within navList
-            if (navList.contains(event.target)) {
-                if (menuToggle?.checked) {
-                    menuToggle.checked = false;
-                }
-            }
-            if (event.target === menuToggle) {
-                // Clicking the menu toggle
-                console.log("clicked menu toggle");
-                menuToggle.checked = !menuToggle.checked;
-            }
         });
+        // window.addEventListener("resize", (event) => {
+        //     const nc = navContainer.getBoundingClientRect()
+        //     if (nc?.width > 600) {
+        //         menuToggle.checked = false;
+        //     }
+        // });
     }
 </script>
 
@@ -45,16 +34,21 @@
             <img src="/images/logo.svg" alt="Residence 541 logo" />
         </a>
     </div>
-    <div class="nav-container">
+    <div class="nav-container" bind:this={navContainer}>
         <div id="menu">
-            <input type="checkbox" bind:this={menuToggle} id="menu-toggle" />
-            <label for="menu-toggle" class="menu-toggle-label">
+            <input
+                type="checkbox"
+                bind:this={menuToggle}
+                id="menu-toggle"
+                class="menu-stack"
+            />
+            <label for="menu-toggle" class="menu-toggle-label menu-stack">
                 <span class="line line1"></span>
                 <span class="line line2"></span>
                 <span class="line line3"></span>
             </label>
         </div>
-        <ul class="nav playfair-display-name" bind:this={navList}>
+        <ul class="nav" bind:this={navList}>
             <li>
                 <a href="/" aria-current={page.url.pathname === "/"}>Home</a>
             </li>
@@ -127,18 +121,17 @@
         font-weight: 500;
         font-style: normal;
         letter-spacing: -1px;
-    }
 
-    .nav > li {
-        list-style: none;
-        display: flex;
-        align-items: center;
-        padding: 0 1rem;
-    }
-
-    .nav a {
-        font-size: 1.3rem;
-        border-bottom: 2px solid transparent;
+        > li {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+        }
+        & a {
+            font-size: 1.3rem;
+            border-bottom: 2px solid transparent;
+        }
     }
 
     .nav a[aria-current="true"] {
@@ -152,21 +145,26 @@
     }
 
     #menu {
-        display: block;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
         aspect-ratio: 1;
         padding: 1rem;
     }
+    .menu-stack {
+        grid-column: 1 / span 1;
+        grid-row: 1 / span 1;
+    }
 
     #menu-toggle {
-        display: none;
+        opacity: 0;
+        z-index: 100;
     }
 
     .menu-toggle-label {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        width: 100%;
-        aspect-ratio: 1;
         cursor: pointer;
     }
 
@@ -227,21 +225,23 @@
         }
     }
 
-    @container ( width > 700px) {
+    @container ( width > 600px) {
         #menu {
             display: none;
         }
-        .nav {
-            top: 0;
-            bottom: 0;
+        .nav-container .nav {
             opacity: 1;
             position: relative;
             flex-direction: row;
             box-shadow: none;
             z-index: 2;
+            top: 0;
         }
-        .nav > li {
+        #menu:has(#menu-toggle:checked) ~ .nav {
+            animation: none;
+        }
+        /* .nav > li {
             padding: 0;
-        }
+        } */
     }
 </style>

@@ -28,10 +28,10 @@
                         <option value={room.id}>{room.name}</option>
                     {/each}
                 </select>
-                <label for="firstname">Firstname</label>
-                <input type="text" name="firstname" placeholder="Firstname" />
-                <label for="lastname">Lastname</label>
-                <input type="text" name="lastname" placeholder="Lastname" />
+                <label for="firstName">Firstname</label>
+                <input type="text" name="firstName" placeholder="Firstname" />
+                <label for="lastName">Lastname</label>
+                <input type="text" name="lastName" placeholder="Lastname" />
                 <label for="email">Email</label>
                 <input type="email" name="email" placeholder="Email" />
                 <label for="phone">Phone</label>

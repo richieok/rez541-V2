@@ -34,6 +34,7 @@
     .gallery {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 450px));
+        justify-content: center;
         gap: 1rem;
     }
     .gallery img {
@@ -54,5 +55,8 @@
     }
     .book-button:hover {
         background-color: #0056b3;
+    }
+    h1 {
+        text-transform: capitalize;
     }
 </style>
