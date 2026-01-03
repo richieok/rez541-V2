@@ -14,8 +14,7 @@
         });
         // Close menu when clicking outside
         document.addEventListener("click", (event) => {
-            // console.log(event.target);
-            if (menuToggle !== event.currentTarget) {
+            if (menuToggle !== event.target) {
                 menuToggle.checked = false;
             }
         });
@@ -111,8 +110,9 @@
         background-color: var(--header-background);
         z-index: -1;
         opacity: 0;
-        font-family: "Poppins", sans-serif;
-        font-weight: 500;
+        /* font-family: "Poppins", sans-serif; */
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
         font-style: normal;
         letter-spacing: -1px;
 
