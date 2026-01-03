@@ -46,6 +46,8 @@
         text-align: center;
         color: white;
         line-height: 1.2;
+        backdrop-filter: blur(3px);
+
         > h1,
         h2,
         h3,

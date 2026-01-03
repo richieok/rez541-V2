@@ -15,16 +15,10 @@
         // Close menu when clicking outside
         document.addEventListener("click", (event) => {
             // console.log(event.target);
-            if (menuToggle !== event.target) {
+            if (menuToggle !== event.currentTarget) {
                 menuToggle.checked = false;
             }
         });
-        // window.addEventListener("resize", (event) => {
-        //     const nc = navContainer.getBoundingClientRect()
-        //     if (nc?.width > 600) {
-        //         menuToggle.checked = false;
-        //     }
-        // });
     }
 </script>
 
