@@ -5,8 +5,31 @@
     let currentIndex = $state(0);
     let beginning = $derived(currentIndex === 0);
     let end = $derived(currentIndex === images.length - 1);
+    let scrollTimeout;
 
-    if (browser) {
+    function handleScroll(e) {
+        const carousel = e.target;
+        const cards = carousel.querySelectorAll(".card");
+        if (cards.length === 0) return;
+
+        // Clear previous timeout
+        clearTimeout(scrollTimeout);
+
+        scrollTimeout = setTimeout(() => {
+            // Set new timeout - fires when scrolling stops
+            console.log("scroll");
+            // Find the card closest to the current scroll position
+            let minDistance = Infinity;
+            cards.forEach((card, index) => {
+                const distance = Math.abs(
+                    card.offsetLeft - carousel.scrollLeft,
+                );
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    currentIndex = index;
+                }
+            });
+        }, 150);
     }
 
     function clickScroll(e) {
@@ -49,7 +72,7 @@
     }
 </script>
 
-<div class="carousel-container">
+<div class="carousel-container" onscroll={handleScroll}>
     <button
         onclick={clickScroll}
         data-direction="left"
@@ -58,7 +81,7 @@
     >
         &#10094;
     </button>
-    <div class="carousel">
+    <div class="carousel" onscroll={handleScroll}>
         {#each images as image (image)}
             <div class="card">
                 <a href="/room/{id}">

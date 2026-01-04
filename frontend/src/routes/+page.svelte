@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head><title>Home</title></svelte:head>
-<Hero src="{signedUrls["public/2-bedroom-suite/bedroom-gf-800w.jpg"]}"/>
+<Hero src="{signedUrls["public/spa/reception3.jpg"]}"/>
 
 <div class="section">
     <div class="x-layout">
@@ -59,7 +59,6 @@
         height: 100%;
         grid-template-columns: repeat(2, 50%);
         grid-template-rows: auto 1fr;
-        font-family: "Poppins", sans-serif;
         overflow: hidden;
     }
 

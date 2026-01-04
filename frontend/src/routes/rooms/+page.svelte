@@ -31,12 +31,11 @@
     }
 
     onMount(async () => {
-        console.log("Spa page data:", data);
         await procRooms(rooms);
-        console.log($state.snapshot(rooms));
-        console.log(
-            rooms[0].imageList.map((img) => rooms[0].signedUrlObj[img]),
-        );
+        // console.log($state.snapshot(rooms));
+        // console.log(
+        //     rooms[0].imageList.map((img) => rooms[0].signedUrlObj[img]),
+        // );
     });
 </script>
 

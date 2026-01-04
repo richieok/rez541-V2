@@ -1,4 +1,5 @@
 import { Booking } from "./models/booking.js"
+import { RoomType } from "./models/roomtype.js";
 
 function generateUrlSafeToken(byteLength = 32) {
   const buffer = crypto.getRandomValues(new Uint8Array(byteLength));
@@ -12,20 +13,37 @@ export const verifyBooking = async (req, res, next) => {
   if (!newBooking) {
     return res.status(400).json({ message: 'No booking data provided' })
   }
+  console.log("verifyBooking( )");
   console.log(newBooking);
   try {
     const token = generateUrlSafeToken()
+    const roomType = await RoomType.findOne({ id: newBooking.roomId })
+    console.log("Token:", token)
     newBooking.token = token
+    newBooking.roomType = roomType._id
     const booking = new Booking(newBooking)
     await booking.save()
-    console.log("Booking saved");
+    // newBooking.roomType = roomType.toObject()
+    // newBooking.name = `${newBooking.firstName} ${newBooking.lastName}`
+    // console.log("Booking saved");
 
-    req.token = token
-    req.email = newBooking.email
+    req.locals.booking = Object.defineProperties(newBooking, {
+      roomType: {
+        value: roomType,
+        enumerable: true
+      },
+      name: {
+        value: `${newBooking.firstName} ${newBooking.lastName}`,
+        enumerable: true
+      }
+    })
+
+    // req.token = token
+    // req.email = newBooking.email
     // Call verification email middleware
     next()
   } catch (error) {
-    console.error('Error verifying booking\n', error.message);
+    // console.error('Error verifying booking\n', error.message);
     res.status(500).json({ message: 'Internal server error' })
   }
 }
@@ -33,7 +51,7 @@ export const verifyBooking = async (req, res, next) => {
 export const confirmBooking = async (req, res, next) => {
   let { bookingToken } = req.body
   console.log(bookingToken);
-  const booking = await Booking.findOne({ token: bookingToken })
+  const booking = await Booking.findOne({ token: bookingToken }).populate('roomType')
   if (!booking) {
     return res.status(404).json({ message: 'Booking not found' })
   }

@@ -13,7 +13,7 @@ import { retrieveSignedUrls } from "$lib/server/signing.js"
 
 export async function POST({ request }) {
     let { uris } = await request.json()
-    console.log('Received URIs:', uris);
+    // console.log('Received URIs:', uris);
     // console.log(uris)
     const res = await fetch('http://backend:4000/api/rez541/v1.1/signurls', {
         method: 'POST',
@@ -23,8 +23,8 @@ export async function POST({ request }) {
         body: JSON.stringify({ uris: uris })
     });
     if (!res.ok) {
-        console.error(res.status)
-        console.error('Failed to retrieve signed URLs:', res.statusText);
+        // console.error(res.status)
+        // console.error('Failed to retrieve signed URLs:', res.statusText);
         return json({ error: res.statusText }, { status: res.status });
     }
     let data = await res.json();

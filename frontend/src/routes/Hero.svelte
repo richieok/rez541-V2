@@ -6,7 +6,7 @@
     <div class="hero-img">
         <img
             {src}
-            alt="Picture of a bedroom"
+            alt="Residence 541 bedroom"
         />
     </div>
     <div class="banner">
@@ -25,6 +25,7 @@
         padding-bottom: 0.5rem;
         grid-template-columns: 1fr clamp(300px, 50%, 600px) 1fr;
         grid-template-rows: 1fr 1fr;
+        font-family: "Montserrat", sans-serif;
     }
 
     .hero-img {
@@ -49,9 +50,7 @@
         backdrop-filter: blur(3px);
 
         > h1,
-        h2,
-        h3,
-        p {
+        h2{
             text-shadow: 0 0 10px black;
             /* text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.922), 0px 0 10px rgba(255, 255, 255, 0.828); */
         }

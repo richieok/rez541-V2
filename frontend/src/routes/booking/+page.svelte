@@ -7,8 +7,8 @@
     let selected = $state();
     let dispForm = $state(true);
 
-    if (browser){
-        selected = roomId ? parseInt(roomId) : ""
+    if (browser) {
+        selected = roomId ? parseInt(roomId) : "";
     }
 
     if (browser && form?.success) {
@@ -64,17 +64,22 @@
     form {
         max-width: 500px;
         margin: 0 auto;
+        container-type: inline-size;
     }
     .inputs {
         display: grid;
-        grid-template-columns: 100px 1fr;
+        /* grid-template-columns: 100px 1fr; */
         gap: 1rem;
+        padding: 0.7rem;
     }
     select {
         padding: 0.5rem;
         font-size: 1rem;
         border: 1px solid #ccc;
         border-radius: 4px;
+    }
+    label {
+        align-content: center;
     }
     input {
         padding: 0.5rem;
@@ -94,5 +99,11 @@
     }
     button:hover {
         background-color: #0056b3;
+    }
+
+    @container (width > 499px) {
+        .inputs {
+            grid-template-columns: 100px 1fr;
+        }
     }
 </style>

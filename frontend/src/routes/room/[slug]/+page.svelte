@@ -2,7 +2,6 @@
     import FixedBar from "$lib/components/FixedBar.svelte";
     let { data } = $props();
     let room = data.room;
-    console.log(room);
 </script>
 
 <svelte:head><title>{room.name}</title></svelte:head>
@@ -58,5 +57,7 @@
     }
     h1 {
         text-transform: capitalize;
+        font-size: clamp(1.3rem, 3vw, 2rem);
+        align-content: center;
     }
 </style>

@@ -18,6 +18,7 @@ import { retrieveSignedUrls } from '$lib/server/signing.js';
 // }
 
 const urls = [
+    "public/spa/reception3.jpg",
     "public/3-bed-suite/living-room-3-bed.jpg",
     "public/exterior/block1-view-800w.jpg",
     "public/3-bed-suite/kitchen-3-bed.jpg",
@@ -31,7 +32,7 @@ export const load = async () => {
         return {};
     }
     const { signedUrls } = await res.json();
-    console.log("signedUrls      ------>", signedUrls)
+    // console.log("signedUrls      ------>", signedUrls)
     return {
         signedUrls
     };
