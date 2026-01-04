@@ -15,8 +15,6 @@ export const actions = {
             const checkIn = formData.get('check-in');
             const checkOut = formData.get('check-out');
             const newBooking = { roomId, firstName, lastName, email, phone, checkIn, checkOut };
-            console.log("formData");
-            console.log(newBooking);
             const res = await fetch('http://backend:4000/api/rez541/v1.1/verifybooking', {
                 method: 'POST',
                 headers: {
@@ -29,7 +27,6 @@ export const actions = {
                 throw new Error(data.message || 'Failed to start booking.');
             }
             console.log('Booking response:', data);
-            console.log("formData");
             message = "Booking initiated successfully. Please check your email to verify your booking."
         } catch (error) {
             return {

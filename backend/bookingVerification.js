@@ -1,11 +1,11 @@
 import { Booking } from "./models/booking.js"
 import { RoomType } from "./models/roomtype.js";
 
-function generateUrlSafeToken(byteLength = 32) {
+function generateUrlSafeToken(byteLength = 12) {
   const buffer = crypto.getRandomValues(new Uint8Array(byteLength));
-  const base64 = btoa(String.fromCharCode(...buffer));
-  // Make it URL-safe
-  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+  return Array.from(buffer)
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
 }
 
 export const verifyBooking = async (req, res, next) => {
