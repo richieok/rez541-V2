@@ -24,7 +24,7 @@
         </div>
         <div>
             <p class="message">
-                At Residence 541, we believe our guest deserve more than just a
+                At Residence 541, we believe our guests deserve more than just a
                 place to stay, they deserve a great experience. From therapeutic
                 spa treatments to personalized services, we've created a space
                 where memories are made and spirits are renewed.
@@ -55,7 +55,7 @@
 
     .x-layout {
         display: grid;
-        gap: 0.5rem;
+        gap: 1rem;
         height: 100%;
         grid-template-columns: repeat(2, 50%);
         grid-template-rows: auto 1fr;
@@ -86,7 +86,7 @@
         font-weight: 400;
         line-height: 1.4;
         text-align: center;
-        padding: 0 1rem;
+        /* padding: 0 1rem; */
     }
 
     @container (width > 700px) {

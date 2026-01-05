@@ -14,13 +14,13 @@ export const actions = {
             const phone = formData.get('phone');
             const checkIn = formData.get('check-in');
             const checkOut = formData.get('check-out');
-            const newBooking = { roomId, firstName, lastName, email, phone, checkIn, checkOut };
+            const bookingObj = { roomId, firstName, lastName, email, phone, checkIn, checkOut };
             const res = await fetch('http://backend:4000/api/rez541/v1.1/verifybooking', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ newBooking })
+                body: JSON.stringify({ bookingObj })
             })
             const data = await res.json();
             if (!res.ok) {

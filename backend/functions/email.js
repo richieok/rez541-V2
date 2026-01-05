@@ -137,7 +137,7 @@ export const sendManagerNotificationEmail = async (req, res, next) => {
 }
 
 function generateBookingEmailHTML(data) {
-  const { name, token, checkIn, checkOut, roomType = {}, verificationLink } = data;
+  const { name, token, checkIn, checkOut, roomTypeObj = {}, verificationLink } = data;
   console.log(token)
   return `
 <!DOCTYPE html>
@@ -210,7 +210,7 @@ function generateBookingEmailHTML(data) {
                           Room Type
                         </td>
                         <td style="padding: 12px 0; color: #2d3748; font-size: 15px; font-weight: 600; text-align: right; border-bottom: 1px solid #e2e8f0; text-transform: capitalize;">
-                          ${roomType.name}
+                          ${roomTypeObj.name}
                         </td>
                       </tr>
                       <tr>

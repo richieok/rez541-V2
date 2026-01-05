@@ -114,6 +114,7 @@
         font-weight: 600;
         font-style: normal;
         letter-spacing: 0.8px;
+        transition: all 0.3s ;
 
         > li {
             list-style: none;
@@ -200,22 +201,9 @@
     #menu:has(#menu-toggle:checked) ~ .nav {
         display: flex;
         /* top: calc(100% + 1rem); */
-        /* transform: translateY(calc(100% + 1rem)); */
-        animation: slide-nav 0.3s ease-out forwards;
-    }
-
-    @keyframes slide-nav {
-        from {
-            transform: translateY(0);
-            /* opacity: 0; */
-        }
-
-        to {
-            transform: translateY(
-                calc(100% + calc(1rem + var(--header-height)))
-            );
-            opacity: 1;
-        }
+        transform: translateY(calc(100% + 1rem + var(--header-height)));
+        opacity: 1;
+        /* animation: slide-nav 0.3s ease-out forwards; */
     }
 
     @container ( width > 600px) {

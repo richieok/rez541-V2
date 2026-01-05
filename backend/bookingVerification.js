@@ -9,37 +9,37 @@ function generateUrlSafeToken(byteLength = 12) {
 }
 
 export const verifyBooking = async (req, res, next) => {
-  let { newBooking } = req.body
-  if (!newBooking) {
+  let { bookingObj } = req.body
+  if (!bookingObj) {
     return res.status(400).json({ message: 'No booking data provided' })
   }
   console.log("verifyBooking( )");
-  console.log(newBooking);
+  console.log(bookingObj);
   try {
     const token = generateUrlSafeToken()
-    const roomType = await RoomType.findOne({ id: newBooking.roomId })
+    const roomType = await RoomType.findOne({ id: bookingObj.roomId })
     console.log("Token:", token)
-    newBooking.token = token
-    newBooking.roomType = roomType._id
-    const booking = new Booking(newBooking)
+    bookingObj.token = token
+    bookingObj.roomType = roomType._id
+    const booking = new Booking(bookingObj)
     await booking.save()
-    // newBooking.roomType = roomType.toObject()
-    // newBooking.name = `${newBooking.firstName} ${newBooking.lastName}`
+    // bookingObj.roomType = roomType.toObject()
+    // bookingObj.name = `${bookingObj.firstName} ${bookingObj.lastName}`
     // console.log("Booking saved");
 
-    req.locals.booking = Object.defineProperties(newBooking, {
-      roomType: {
+    req.locals.booking = Object.defineProperties(bookingObj, {
+      roomTypeObj: {
         value: roomType,
         enumerable: true
       },
       name: {
-        value: `${newBooking.firstName} ${newBooking.lastName}`,
+        value: booking.fullName,
         enumerable: true
       }
     })
 
     // req.token = token
-    // req.email = newBooking.email
+    // req.email = bookingObj.email
     // Call verification email middleware
     next()
   } catch (error) {
