@@ -6,37 +6,39 @@
 </script>
 
 <svelte:head><title>Home</title></svelte:head>
-<Hero src="{signedUrls["public/spa/reception3.jpg"]}"/>
+<div class="fade-in">
+    <Hero src="{signedUrls["public/spa/reception3.jpg"]}"/>
 
-<div class="section">
-    <div class="x-layout">
-        <div class="img-frame pos-1">
-            <img
-                src="{signedUrls["public/3-bed-suite/living-room-3-bed.jpg"]}"
-                alt=""
-            />
-        </div>
-        <div class="img-frame pos-3">
-            <img
-                src="{signedUrls["public/exterior/block1-view-800w.jpg"]}"
-                alt=""
-            />
-        </div>
-        <div>
-            <p class="message">
-                At Residence 541, we believe our guests deserve more than just a
-                place to stay, they deserve a great experience. From therapeutic
-                spa treatments to personalized services, we've created a space
-                where memories are made and spirits are renewed.
-            </p>
+    <div class="section">
+        <div class="x-layout">
+            <div class="img-frame pos-1">
+                <img
+                    src="{signedUrls["public/3-bed-suite/living-room-3-bed.jpg"]}"
+                    alt=""
+                />
+            </div>
+            <div class="img-frame pos-3">
+                <img
+                    src="{signedUrls["public/exterior/block1-view-800w.jpg"]}"
+                    alt=""
+                />
+            </div>
+            <div>
+                <p class="message">
+                    At Residence 541, we believe our guests deserve more than just a
+                    place to stay, they deserve a great experience. From therapeutic
+                    spa treatments to personalized services, we've created a space
+                    where memories are made and spirits are renewed.
+                </p>
+            </div>
         </div>
     </div>
 </div>
 
+
 <style>
     .section {
         height: max(calc(100vh - var(--header-height)), 500px);
-        padding: 0.5em 0;
         container-type: inline-size;
     }
 
@@ -55,11 +57,16 @@
 
     .x-layout {
         display: grid;
-        gap: 1rem;
         height: 100%;
+        max-width: var(--pg-w-max);
         grid-template-columns: repeat(2, 50%);
         grid-template-rows: auto 1fr;
         overflow: hidden;
+        padding: .5rem 0 .5rem;
+        margin: 0 auto;
+        > div {
+            padding: 0 1rem;
+        }
     }
 
     .pos-1 {
@@ -78,7 +85,7 @@
         display: grid;
         grid-column: 1 / span 2;
         place-content: center;
-        padding: 1rem 0;
+        padding: 2rem 1rem;
     }
 
     .message {
@@ -103,6 +110,18 @@
         div:has(> .message) {
             grid-column: 2 / span 1;
             grid-row: 1 / span 1;
+        }
+    }
+    @container ( width > 1200px){
+        .x-layout {
+            & .pos-1 {
+                padding-left: 0;
+                padding-right: .5rem;
+            }
+            & .pos-3 {
+                padding-right: 0;
+                padding-left: .5rem;
+            }
         }
     }
 </style>

@@ -6,6 +6,8 @@
     let navList;
     let navContainer
 
+    // console.log($state.snapshot(page.url.pathname))
+
     if (browser) {
         document.addEventListener("scroll", (event) => {
             if (menuToggle?.checked) {
@@ -46,12 +48,12 @@
                 <a href="/" aria-current={page.url.pathname === "/"}>Home</a>
             </li>
             <li>
-                <a href="/rooms" aria-current={page.url.pathname === "/rooms"}
+                <a href="/rooms" aria-current={page.url.pathname.startsWith("/room")}
                     >Bookings</a
                 >
             </li>
             <li>
-                <a href="/spa" aria-current={page.url.pathname === "/spa"}
+                <a href="/spa" aria-current={page.url.pathname.startsWith("/spa")}
                     >Spa</a
                 >
             </li>
@@ -153,6 +155,8 @@
     #menu-toggle {
         opacity: 0;
         z-index: 100;
+        width: 100%;
+        height: 100%;
     }
 
     .menu-toggle-label {

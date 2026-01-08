@@ -16,8 +16,7 @@
     }
 </script>
 
-<div class="page">
-    <h1>Booking</h1>
+<div class="page fade-in">
     {#if dispForm}
         <form method="post">
             <div class="inputs">
@@ -60,6 +59,7 @@
 <style>
     .page {
         min-height: 100vh;
+        padding-top: 1rem;
     }
     form {
         max-width: 500px;

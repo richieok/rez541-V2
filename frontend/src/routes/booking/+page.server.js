@@ -1,5 +1,12 @@
 import { getRooms } from "$lib/server/bookingApp.js"
 
+function formatDateWithTime(dateString, hour) {
+    if (!dateString) return "";
+    const date = new Date(dateString + "T00:00:00");
+    date.setHours(hour, 0, 0, 0);
+    return date.toISOString();
+}
+
 export const actions = {
     default: async ({ request }) => {
         // console.log('Origin:', request.headers.get('origin'));
@@ -12,8 +19,8 @@ export const actions = {
             const lastName = formData.get('lastName');
             const email = formData.get('email');
             const phone = formData.get('phone');
-            const checkIn = formData.get('check-in');
-            const checkOut = formData.get('check-out');
+            const checkIn = formatDateWithTime(formData.get('check-in'), 13);
+            const checkOut = formatDateWithTime(formData.get('check-out'), 12);
             const bookingObj = { roomId, firstName, lastName, email, phone, checkIn, checkOut };
             const res = await fetch('http://backend:4000/api/rez541/v1.1/verifybooking', {
                 method: 'POST',

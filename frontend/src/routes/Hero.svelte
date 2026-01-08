@@ -1,13 +1,10 @@
 <script>
-    let {src = ""} = $props()
+    let { src = "" } = $props();
 </script>
 
 <div class="hero">
     <div class="hero-img">
-        <img
-            {src}
-            alt="Residence 541 bedroom"
-        />
+        <img {src} alt="Residence 541 bedroom" />
     </div>
     <div class="banner">
         <h2 class="m2">Welcome to</h2>
@@ -20,12 +17,14 @@
 <style>
     .hero {
         /* height: max(calc(100vh - var(--header-height)), 500px); */
+        max-width: var(--pg-w-max);
         height: clamp(500px, calc(100vh - var(--header-height)), 800px);
         display: grid;
-        padding-bottom: 0.5rem;
+        padding: 1rem 1rem 0.5rem;
         grid-template-columns: 1fr clamp(300px, 50%, 600px) 1fr;
         grid-template-rows: 1fr 1fr;
         font-family: "Montserrat", sans-serif;
+        margin: 0 auto;
     }
 
     .hero-img {
@@ -50,9 +49,14 @@
         backdrop-filter: blur(3px);
 
         > h1,
-        h2{
+        h2 {
             text-shadow: 0 0 10px black;
-            /* text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.922), 0px 0 10px rgba(255, 255, 255, 0.828); */
+            /* text-shadow:
+                2px 2px 4px rgba(0, 0, 0, 0.8),
+                -1px -1px 0 black,
+                1px -1px 0 black,
+                -1px 1px 0 black,
+                1px 1px 0 black; */
         }
         & .m1 {
             /* font-size: 2.2rem; */
@@ -87,5 +91,11 @@
 
     .hero-button:any-link {
         color: white;
+    }
+
+    @container (width > 1200px) {
+        .hero {
+            padding: 1rem 0 0.5rem;
+        }
     }
 </style>

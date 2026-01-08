@@ -9,6 +9,7 @@
     --nav-color: white;
     --nav-text-color: black;
     --color-primary: white;
+    --pg-w-max: 1200px;
 }
 
 html {
@@ -23,7 +24,6 @@ html {
 }
 
 header,
-main,
 footer {
     max-width: 1200px;
     margin: 0 auto;

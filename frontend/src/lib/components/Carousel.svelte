@@ -72,7 +72,7 @@
     }
 </script>
 
-<div class="carousel-container" onscroll={handleScroll}>
+<div class="carousel-container">
     <button
         onclick={clickScroll}
         data-direction="left"
@@ -107,24 +107,27 @@
 
         > button {
             position: absolute;
-            padding: 0.8rem;
-            background-color: rgb(122, 102, 186);
-            border-radius: 50%;
+            padding: 0.5rem 1rem;
+            /* background-color: rgb(122, 102, 186); */
+            border-radius: 10px;
             border: none;
             color: white;
+            -webkit-text-stroke: 4px black;
+            paint-order: stroke fill; /* Optional: makes stroke cleaner */
             font-weight: bold;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 2rem;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 2.4rem;
-            height: 2.4rem;
+            background-color: transparent;
+            backdrop-filter: blur(5px);
+            /* text-shadow: ; */
         }
 
         > button:hover:not(:disabled) {
-            background-color: rgb(102, 82, 166);
+            /* background-color: rgb(102, 82, 166); */
             transform: translateY(-50%) scale(1.2);
         }
 

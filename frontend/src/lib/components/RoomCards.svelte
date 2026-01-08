@@ -15,7 +15,6 @@
         width: 350px;
         height: 480px;
         background-color: lightgray;
-        font-family: "Poppins", sans-serif;
 
         h2,
         h3 {

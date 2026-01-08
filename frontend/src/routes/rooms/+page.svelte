@@ -55,6 +55,9 @@
 
 <style>
     .room-wrapper {
+        max-width: var(--pg-w-max);
+        margin: 0 auto;
+        padding-top: 1em;
         --pg-height: clamp(500px, calc(100vh - var(--header-height)), 800px);
         min-height: var(--pg-height);
         --gap: 1rem;
