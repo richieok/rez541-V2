@@ -4,11 +4,11 @@
 :root {
     --inline-size-1: 600px;
     --header-height: 5em;
-    --header-background: #e2e7e5;
+    --header-background: hsl(225deg 2.65% 23.06%);
     --nav-h-space: 3em;
     --nav-color: white;
-    --nav-text-color: black;
-    --color-primary: white;
+    --nav-text-color: white;
+    --color-primary: hsl(42, 60%, 65%);
     --pg-w-max: 1200px;
 }
 
@@ -24,14 +24,16 @@ html {
 }
 
 header,
+main,
 footer {
-    max-width: 1200px;
+    max-width: var(--pg-w-max);
     margin: 0 auto;
 }
 
 .fade-in {
     animation: fade-in .5s forwards;
 }
+
 
 @keyframes fade-in {
     from {

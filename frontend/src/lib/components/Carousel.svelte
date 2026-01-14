@@ -108,10 +108,10 @@
         > button {
             position: absolute;
             padding: 0.5rem 1rem;
+            color: white;
             /* background-color: rgb(122, 102, 186); */
             border-radius: 10px;
             border: none;
-            color: white;
             -webkit-text-stroke: 4px black;
             paint-order: stroke fill; /* Optional: makes stroke cleaner */
             font-weight: bold;

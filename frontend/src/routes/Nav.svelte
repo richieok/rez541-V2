@@ -49,7 +49,7 @@
             </li>
             <li>
                 <a href="/rooms" aria-current={page.url.pathname.startsWith("/room")}
-                    >Bookings</a
+                    >Accomodations</a
                 >
             </li>
             <li>
@@ -76,8 +76,8 @@
         display: grid;
         grid-template-columns: var(--header-height) 1fr;
         z-index: 100;
-        /* background-color: white; */
         background-color: var(--header-background);
+        color: var(--nav-text-color);
     }
     .logo-container {
         overflow: hidden;
@@ -101,14 +101,13 @@
     .nav {
         display: flex;
         flex-direction: column;
+        row-gap: 1rem;
         position: absolute;
         bottom: var(--header-height);
         padding-inline-start: 0;
         padding: 1rem;
         border-radius: 1rem 0 0 1rem;
         box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.429);
-        gap: 1rem;
-        color: var(--nav-text-color);
         background-color: var(--header-background);
         z-index: -1;
         opacity: 0;
@@ -132,7 +131,7 @@
 
     .nav a[aria-current="true"] {
         /* font-weight: 600; */
-        border-bottom: 2px solid #785bd1;
+        border-bottom: 2px solid hsl(42, 60%, 65%);
     }
 
     .nav a:any-link {
@@ -171,7 +170,7 @@
         margin: 5px 0;
         border-radius: 6px;
         transition: all 0.2s ease-in-out;
-        background-color: black;
+        background-color: white;
     }
 
     .menu-toggle-label .line1 {
@@ -223,7 +222,7 @@
             top: 0;
         }
         #menu:has(#menu-toggle:checked) ~ .nav {
-            animation: none;
+            transform: translateY(0);
         }
         /* .nav > li {
             padding: 0;

@@ -61,12 +61,12 @@
         & .m1 {
             /* font-size: 2.2rem; */
             color: white;
-            font-size: clamp(2.2rem, 5vw, 3rem);
+            font-size: clamp(2.3rem, 5vw, 3rem);
             line-height: 1.2;
         }
         & .m2 {
             /* font-size: 1rem; */
-            font-size: clamp(1rem, 5vw, 2rem);
+            font-size: clamp(1.3rem, 5vw, 2rem);
         }
     }
 
@@ -75,10 +75,11 @@
         margin-top: 1em;
         padding: 1em 0.8em;
         /* background: linear-gradient(-45deg, #5638c0c6, #7b4cc66a); */
-        background-color: #785bd1;
+        /* background-color: #785bd1; */
+        background-color: oklch(0.84 0.12 83.48);
         text-decoration: none;
         font-size: 1.2rem;
-        font-weight: 600;
+        font-weight: 700;
         border-radius: 0.5em;
         box-shadow: 0 8px 10px rgba(0, 0, 0, 0.888);
         /* transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); */
@@ -90,10 +91,10 @@
     }
 
     .hero-button:any-link {
-        color: white;
+        color: black;
     }
 
-    @container (width > 1200px) {
+    @container (width > 1199px) {
         .hero {
             padding: 1rem 0 0.5rem;
         }
