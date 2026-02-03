@@ -1,5 +1,6 @@
 <script>
     import FixedBar from "$lib/components/FixedBar.svelte";
+    import ActionButton from "$lib/components/ActionButton.svelte";
     let { data } = $props();
     let room = data.room;
 </script>
@@ -17,7 +18,8 @@
     </div>
     <FixedBar>
         <h1>{room.name}</h1>
-        <a class="book-button" href="/booking?roomId={room.id}">Book Now</a>
+        <!-- <a class="book-button" href="/booking?roomId={room.id}">Book Now</a> -->
+        <ActionButton href="/booking?roomId={room.id}" text="Book Now" />
     </FixedBar>
 </div>
 

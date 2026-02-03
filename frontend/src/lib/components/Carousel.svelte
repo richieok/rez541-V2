@@ -73,31 +73,40 @@
 </script>
 
 <div class="carousel-container">
-    <button
-        onclick={clickScroll}
-        data-direction="left"
-        aria-label="Previous"
-        disabled={currentIndex === 0}
-    >
-        &#10094;
-    </button>
-    <div class="carousel" onscroll={handleScroll}>
-        {#each images as image (image)}
-            <div class="card">
-                <a href="/room/{id}">
-                    <img src={image} alt="Carousel" />
-                </a>
+    {#if images.length === 0}
+        <div class="no-images">
+            <div class="placeholder">
+                <i class="fa-solid fa-down-long"></i>
+                <!-- <p>Downloading image</p> -->
             </div>
-        {/each}
-    </div>
-    <button
-        onclick={clickScroll}
-        data-direction="right"
-        aria-label="Next"
-        disabled={images.length < 1 || currentIndex === images.length - 1}
-    >
-        &#10095;
-    </button>
+        </div>
+    {:else}
+        <button
+            onclick={clickScroll}
+            data-direction="left"
+            aria-label="Previous"
+            disabled={currentIndex === 0}
+        >
+            &#10094;
+        </button>
+        <div class="carousel" onscroll={handleScroll}>
+            {#each images as image (image)}
+                <div class="card">
+                    <a href="/room/{id}">
+                        <img src={image} alt="Carousel" />
+                    </a>
+                </div>
+            {/each}
+        </div>
+        <button
+            onclick={clickScroll}
+            data-direction="right"
+            aria-label="Next"
+            disabled={images.length < 1 || currentIndex === images.length - 1}
+        >
+            &#10095;
+        </button>
+    {/if}
 </div>
 
 <style>
@@ -175,6 +184,49 @@
             height: 100%;
             object-fit: cover;
             border-radius: 8px;
+        }
+    }
+
+    .no-images {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f5f5f5 0%, #efefef 100%);
+        border-radius: 8px;
+    }
+
+    .placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    .placeholder i {
+        font-size: 3rem;
+        color: #999;
+    }
+
+    .placeholder p {
+        font-size: 1.1rem;
+        color: #666;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    @keyframes pulse {
+        0%,
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.6;
+            transform: scale(0.95);
         }
     }
 </style>

@@ -31,7 +31,7 @@
         <div class="footer-section" id="contact">
             <h3>Follow us</h3>
             <div class="socials">
-                <a href="#">
+                <a href="/#" aria-label="socials">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 640 640"

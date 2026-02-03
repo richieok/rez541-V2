@@ -4,7 +4,7 @@
 :root {
     --inline-size-1: 600px;
     --header-height: 5em;
-    --header-background: hsl(225deg 2.65% 23.06%);
+    --header-background: lch(24.39% 1.39 271.74);
     --nav-h-space: 3em;
     --nav-color: white;
     --nav-text-color: white;

@@ -73,12 +73,12 @@
     .hero-button {
         display: inline-block;
         margin-top: 1em;
-        padding: 1em 0.8em;
+        padding: 0.8em 0.5em;
         /* background: linear-gradient(-45deg, #5638c0c6, #7b4cc66a); */
         /* background-color: #785bd1; */
         background-color: oklch(0.84 0.12 83.48);
         text-decoration: none;
-        font-size: 1.2rem;
+        font-size: 1.5rem;
         font-weight: 700;
         border-radius: 0.5em;
         box-shadow: 0 8px 10px rgba(0, 0, 0, 0.888);

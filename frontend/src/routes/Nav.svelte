@@ -4,7 +4,7 @@
 
     let menuToggle;
     let navList;
-    let navContainer
+    let navContainer;
 
     // console.log($state.snapshot(page.url.pathname))
 
@@ -48,13 +48,16 @@
                 <a href="/" aria-current={page.url.pathname === "/"}>Home</a>
             </li>
             <li>
-                <a href="/rooms" aria-current={page.url.pathname.startsWith("/room")}
+                <a
+                    href="/rooms"
+                    aria-current={page.url.pathname.startsWith("/room")}
                     >Accomodations</a
                 >
             </li>
             <li>
-                <a href="/spa" aria-current={page.url.pathname.startsWith("/spa")}
-                    >Spa</a
+                <a
+                    href="/spa"
+                    aria-current={page.url.pathname.startsWith("/spa")}>Spa</a
                 >
             </li>
             <li>
@@ -115,7 +118,7 @@
         font-weight: 600;
         font-style: normal;
         letter-spacing: 0.8px;
-        transition: all 0.3s ;
+        transition: all 0.3s;
 
         > li {
             list-style: none;
@@ -126,6 +129,7 @@
         & a {
             font-size: 1.3rem;
             border-bottom: 2px solid transparent;
+            transition: all 0.5s;
         }
     }
 
@@ -137,6 +141,10 @@
     .nav a:any-link {
         text-decoration-line: none;
         color: inherit;
+    }
+
+    .nav a:hover {
+        color: var(--color-primary);
     }
 
     #menu {
