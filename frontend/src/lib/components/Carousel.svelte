@@ -5,8 +5,31 @@
     let currentIndex = $state(0);
     let beginning = $derived(currentIndex === 0);
     let end = $derived(currentIndex === images.length - 1);
+    let scrollTimeout;
 
-    if (browser) {
+    function handleScroll(e) {
+        const carousel = e.target;
+        const cards = carousel.querySelectorAll(".card");
+        if (cards.length === 0) return;
+
+        // Clear previous timeout
+        clearTimeout(scrollTimeout);
+
+        scrollTimeout = setTimeout(() => {
+            // Set new timeout - fires when scrolling stops
+            console.log("scroll");
+            // Find the card closest to the current scroll position
+            let minDistance = Infinity;
+            cards.forEach((card, index) => {
+                const distance = Math.abs(
+                    card.offsetLeft - carousel.scrollLeft,
+                );
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    currentIndex = index;
+                }
+            });
+        }, 150);
     }
 
     function clickScroll(e) {
@@ -50,31 +73,40 @@
 </script>
 
 <div class="carousel-container">
-    <button
-        onclick={clickScroll}
-        data-direction="left"
-        aria-label="Previous"
-        disabled={currentIndex === 0}
-    >
-        &#10094;
-    </button>
-    <div class="carousel">
-        {#each images as image (image)}
-            <div class="card">
-                <a href="/room/{id}">
-                    <img src={image} alt="Carousel" />
-                </a>
+    {#if images.length === 0}
+        <div class="no-images">
+            <div class="placeholder">
+                <i class="fa-solid fa-down-long"></i>
+                <!-- <p>Downloading image</p> -->
             </div>
-        {/each}
-    </div>
-    <button
-        onclick={clickScroll}
-        data-direction="right"
-        aria-label="Next"
-        disabled={images.length < 1 || currentIndex === images.length - 1}
-    >
-        &#10095;
-    </button>
+        </div>
+    {:else}
+        <button
+            onclick={clickScroll}
+            data-direction="left"
+            aria-label="Previous"
+            disabled={currentIndex === 0}
+        >
+            &#10094;
+        </button>
+        <div class="carousel" onscroll={handleScroll}>
+            {#each images as image (image)}
+                <div class="card">
+                    <a href="/room/{id}">
+                        <img src={image} alt="Carousel" />
+                    </a>
+                </div>
+            {/each}
+        </div>
+        <button
+            onclick={clickScroll}
+            data-direction="right"
+            aria-label="Next"
+            disabled={images.length < 1 || currentIndex === images.length - 1}
+        >
+            &#10095;
+        </button>
+    {/if}
 </div>
 
 <style>
@@ -84,24 +116,27 @@
 
         > button {
             position: absolute;
-            padding: 0.8rem;
-            background-color: rgb(122, 102, 186);
-            border-radius: 50%;
-            border: none;
+            padding: 0.5rem 1rem;
             color: white;
+            /* background-color: rgb(122, 102, 186); */
+            border-radius: 10px;
+            border: none;
+            -webkit-text-stroke: 4px black;
+            paint-order: stroke fill; /* Optional: makes stroke cleaner */
             font-weight: bold;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 2rem;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 2.4rem;
-            height: 2.4rem;
+            background-color: transparent;
+            backdrop-filter: blur(5px);
+            /* text-shadow: ; */
         }
 
         > button:hover:not(:disabled) {
-            background-color: rgb(102, 82, 166);
+            /* background-color: rgb(102, 82, 166); */
             transform: translateY(-50%) scale(1.2);
         }
 
@@ -149,6 +184,49 @@
             height: 100%;
             object-fit: cover;
             border-radius: 8px;
+        }
+    }
+
+    .no-images {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f5f5f5 0%, #efefef 100%);
+        border-radius: 8px;
+    }
+
+    .placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    .placeholder i {
+        font-size: 3rem;
+        color: #999;
+    }
+
+    .placeholder p {
+        font-size: 1.1rem;
+        color: #666;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    @keyframes pulse {
+        0%,
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.6;
+            transform: scale(0.95);
         }
     }
 </style>

@@ -54,7 +54,7 @@
     <path
        id="path4"
        d="M50 10.105c-.333 2.66-1.633 10.089-2 15.958-.446 7.16 0 15.958 0 23.937v41.895h4V50c0-7.979.446-16.777 0-23.937-.367-5.87-1.667-13.298-2-15.958Z"
-       style="fill:#785bd1;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3.99874;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers" />
+       style="fill:hsl(42, 60%, 65%);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3.99874;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers" />
     <path
        id="center-h-stripe-bkup"
        d="M45.03 89.895h9.94"
@@ -62,17 +62,17 @@
     <path
        id="path11"
        d="M45.03 89.895h9.94"
-       style="fill:none;fill-opacity:0.998454;fill-rule:nonzero;stroke:#785bd1;stroke-width:3.99874;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers" />
+       style="fill:none;fill-opacity:0.998454;fill-rule:nonzero;stroke:hsl(42, 60%, 65%);stroke-width:3.99874;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers" />
     <g
        id="g13">
       <path
          id="path12"
          d="m60.773 10.105-2 15.958v65.832h32.093v-4H62.772V26.064Z"
-         style="fill:#785bd1;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3.99874;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers" />
+         style="fill:hsl(42, 60%, 65%);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3.99874;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers" />
       <path
          id="path13"
          d="M70.773 10.105c-.333 2.332-1.557 7.724-2 13.994-.874 12.39 0 37.318 0 55.978v1.999H90.866v-3.999H72.775c.057-18.404.84-42.025-.003-53.978-.442-6.27-1.666-11.662-2-13.994z"
-         style="fill:#785bd1;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3.99874;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers" />
+         style="fill:hsl(42, 60%, 65%);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3.99874;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers" />
     </g>
     <g
        id="g17"
@@ -80,11 +80,11 @@
       <path
          id="path16"
          d="m60.773 10.105-2 15.958v65.832h32.093v-4H62.772V26.064Z"
-         style="fill:#785bd1;fill-opacity:0.99845397;fill-rule:nonzero;stroke:none;stroke-width:3.99874;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers" />
+         style="fill:hsl(42, 60%, 65%);fill-opacity:0.99845397;fill-rule:nonzero;stroke:none;stroke-width:3.99874;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers" />
       <path
          id="path17"
          d="M70.773 10.105c-.333 2.332-1.557 7.724-2 13.994-.874 12.39 0 37.318 0 55.978v1.999H90.866v-3.999H72.775c.057-18.404.84-42.025-.003-53.978-.442-6.27-1.666-11.662-2-13.994z"
-         style="fill:#785bd1;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3.99874;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers" />
+         style="fill:hsl(42, 60%, 65%);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3.99874;stroke-dasharea:none;stroke-opacity:1;paint-order:stroke fill markers" />
     </g>
   </g>
 </svg>

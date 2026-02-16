@@ -1,8 +1,8 @@
 <script>
     import FixedBar from "$lib/components/FixedBar.svelte";
+    import ActionButton from "$lib/components/ActionButton.svelte";
     let { data } = $props();
     let room = data.room;
-    console.log(room);
 </script>
 
 <svelte:head><title>{room.name}</title></svelte:head>
@@ -18,7 +18,8 @@
     </div>
     <FixedBar>
         <h1>{room.name}</h1>
-        <a class="book-button" href="/booking?roomId={room.id}">Book Now</a>
+        <!-- <a class="book-button" href="/booking?roomId={room.id}">Book Now</a> -->
+        <ActionButton href="/booking?roomId={room.id}" text="Book Now" />
     </FixedBar>
 </div>
 
@@ -58,5 +59,7 @@
     }
     h1 {
         text-transform: capitalize;
+        font-size: clamp(1.3rem, 3vw, 2rem);
+        align-content: center;
     }
 </style>

@@ -4,23 +4,36 @@
 :root {
     --inline-size-1: 600px;
     --header-height: 5em;
-    --header-background: #e2e7e5;
+    --header-background: lch(24.39% 1.39 271.74);
     --nav-h-space: 3em;
     --nav-color: white;
-    --nav-text-color: black;
-    --color-primary: white;
+    --nav-text-color: white;
+    --color-primary: hsl(42, 60%, 65%);
+    --pg-w-max: 1200px;
+}
+
+html {
+    font-family: "Open Sans", sans-serif;
+    scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce){
+    html {
+        scroll-behavior: auto;
+    }
 }
 
 header,
 main,
 footer {
-    max-width: 1200px;
+    max-width: var(--pg-w-max);
     margin: 0 auto;
 }
 
 .fade-in {
     animation: fade-in .5s forwards;
 }
+
 
 @keyframes fade-in {
     from {
@@ -30,4 +43,8 @@ footer {
     to {
         opacity: 1;
     }
+}
+
+@view-transition {
+    navigation: auto;
 }
