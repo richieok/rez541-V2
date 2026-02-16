@@ -9,3 +9,4 @@ frontend/.env
 frontend/.env.local
 web/dev/logs
 web/prod/logs
+cfn-templates
