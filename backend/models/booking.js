@@ -34,12 +34,12 @@ const BookingSchema = new Schema(
             type: Number,
             required: true
         },
-        // roomType: {
-        //     type: Schema.Types.ObjectId,
-        //     ref: 'RoomType',
-        //     required: true,
-        //     // Reference to the RoomType model
-        // },
+        roomType: {
+            type: Schema.Types.ObjectId,
+            ref: 'RoomType',
+            required: true,
+            // Reference to the RoomType model
+        },
         checkIn: {
             type: Date,
             required: true,
@@ -76,5 +76,14 @@ const BookingSchema = new Schema(
 )
 
 BookingSchema.index({ token: 1, status: 1 });
+
+// Add this before exporting the model
+BookingSchema.virtual('fullName').get(function() {
+    return `${this.firstName} ${this.lastName}`.trim();
+});
+
+// Make sure virtuals are included when converting to JSON/Object
+BookingSchema.set('toJSON', { virtuals: true });
+BookingSchema.set('toObject', { virtuals: true });
 
 export const Booking = model('Booking', BookingSchema)

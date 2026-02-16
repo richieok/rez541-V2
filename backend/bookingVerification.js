@@ -1,31 +1,49 @@
 import { Booking } from "./models/booking.js"
+import { RoomType } from "./models/roomtype.js";
 
-function generateUrlSafeToken(byteLength = 32) {
+function generateUrlSafeToken(byteLength = 12) {
   const buffer = crypto.getRandomValues(new Uint8Array(byteLength));
-  const base64 = btoa(String.fromCharCode(...buffer));
-  // Make it URL-safe
-  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+  return Array.from(buffer)
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
 }
 
 export const verifyBooking = async (req, res, next) => {
-  let { newBooking } = req.body
-  if (!newBooking) {
+  let { bookingObj } = req.body
+  if (!bookingObj) {
     return res.status(400).json({ message: 'No booking data provided' })
   }
-  console.log(newBooking);
+  console.log("verifyBooking( )");
+  console.log(bookingObj);
   try {
     const token = generateUrlSafeToken()
-    newBooking.token = token
-    const booking = new Booking(newBooking)
+    const roomType = await RoomType.findOne({ id: bookingObj.roomId })
+    console.log("Token:", token)
+    bookingObj.token = token
+    bookingObj.roomType = roomType._id
+    const booking = new Booking(bookingObj)
     await booking.save()
-    console.log("Booking saved");
+    // bookingObj.roomType = roomType.toObject()
+    // bookingObj.name = `${bookingObj.firstName} ${bookingObj.lastName}`
+    // console.log("Booking saved");
 
-    req.token = token
-    req.email = newBooking.email
+    req.locals.booking = Object.defineProperties(bookingObj, {
+      roomTypeObj: {
+        value: roomType,
+        enumerable: true
+      },
+      name: {
+        value: booking.fullName,
+        enumerable: true
+      }
+    })
+
+    // req.token = token
+    // req.email = bookingObj.email
     // Call verification email middleware
     next()
   } catch (error) {
-    console.error('Error verifying booking\n', error.message);
+    // console.error('Error verifying booking\n', error.message);
     res.status(500).json({ message: 'Internal server error' })
   }
 }
@@ -33,7 +51,7 @@ export const verifyBooking = async (req, res, next) => {
 export const confirmBooking = async (req, res, next) => {
   let { bookingToken } = req.body
   console.log(bookingToken);
-  const booking = await Booking.findOne({ token: bookingToken })
+  const booking = await Booking.findOne({ token: bookingToken }).populate('roomType')
   if (!booking) {
     return res.status(404).json({ message: 'Booking not found' })
   }
