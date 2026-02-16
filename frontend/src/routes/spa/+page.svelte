@@ -20,8 +20,8 @@
             perfect blend of relaxation and rejuvenation.
         </p>
     </div>
-    <div class="x-structure">
-        <article>
+    <div class="features">
+        <section class="headline">
             <h2>Our Spa Features:</h2>
             <p>
                 Our spa facilities have been designed with your comfort and
@@ -29,35 +29,39 @@
                 to creating an atmosphere of complete relaxation and
                 rejuvenation.
             </p>
-        </article>
-        <h2>What We Offer:</h2>
-        <p>
-            <b>Treatment Rooms</b> Experience your services in our beautifully appointed
-            treatment rooms, each designed to provide a private, peaceful environment.
-            Soft lighting, comfortable treatment beds, and calming décor ensure you
-            feel completely at ease from the moment you arrive.
-        </p>
-        <p>
-            <b>Relaxation Lounge</b> Before or after your treatment, unwind in our
-            serene relaxation area. Enjoy complimentary herbal teas and infused water
-            while you allow your body and mind to fully embrace the benefits of your
-            spa experience.
-        </p>
-        <p>
-            <b>Changing Facilities</b> Our well-appointed changing rooms feature
-            private lockers, shower facilities, and all the amenities you need to
-            prepare for your treatment or freshen up afterwards.
-        </p>
-        <p>
-            <b>Sauna & Steam Room</b> Enhance your spa visit with time in our traditional
-            sauna or aromatic steam room, perfect for detoxifying and preparing your
-            body for treatments.
-        </p>
-        <p>
-            <b>Couples' Treatment Suite</b> Share the spa experience with someone
-            special in our dedicated couples' treatment room, where you can enjoy
-            side-by-side services in an intimate, romantic setting.
-        </p>
+        </section>
+        <section>
+            <h2>What We Offer:</h2>
+            <div class="offers">
+                <p>
+                    <b>Treatment Rooms</b> Experience your services in our beautifully
+                    appointed treatment rooms, each designed to provide a private, peaceful
+                    environment. Soft lighting, comfortable treatment beds, and calming
+                    décor ensure you feel completely at ease from the moment you arrive.
+                </p>
+                <p>
+                    <b>Relaxation Lounge</b> Before or after your treatment, unwind in
+                    our serene relaxation area. Enjoy complimentary herbal teas and infused
+                    water while you allow your body and mind to fully embrace the benefits
+                    of your spa experience.
+                </p>
+                <p>
+                    <b>Changing Facilities</b> Our well-appointed changing rooms feature
+                    private lockers, shower facilities, and all the amenities you need
+                    to prepare for your treatment or freshen up afterwards.
+                </p>
+                <p>
+                    <b>Sauna & Steam Room</b> Enhance your spa visit with time in our
+                    traditional sauna or aromatic steam room, perfect for detoxifying
+                    and preparing your body for treatments.
+                </p>
+                <p>
+                    <b>Couples' Treatment Suite</b> Share the spa experience with someone
+                    special in our dedicated couples' treatment room, where you can enjoy
+                    side-by-side services in an intimate, romantic setting.
+                </p>
+            </div>
+        </section>
         <!-- <img src={signedUrls["public/spa/spa-lotus-plain.svg"]} alt=""> -->
     </div>
     <div>
@@ -157,7 +161,7 @@
         min-height: var(--pg-height);
         --gap: 1rem;
         --padding-h: 1rem;
-        padding: var(--gap) 0;
+        padding: var(--gap) 1rem;
     }
 
     .s-hero {
@@ -190,23 +194,31 @@
             }
         }
     }
-    .x-structure {
-        display: grid;
-        grid-template-columns:
-            1fr minmax(80%, calc(900px - (var(--padding-h) * 2)))
-            1fr;
-        > * {
-            grid-column: 2 / span 1;
-            padding-left: 1rem;
-            padding-right: 1rem;
-        }
+    .features {
         h2 {
-            font-size: 1.4rem;
-            margin-bottom: 0.5rem;
+            font-size: 2.5em;
         }
-        p {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
+        > .headline {
+            display: grid;
+            justify-content: center;
+            > * {
+                max-width: 400px;
+                text-align: center;
+            }
+            p {
+                font-size: 1.2em;
+            }
         }
+        section:has(.offers)>h2 {
+            text-align: center;
+        }
+        .offers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-rows: auto;
+            gap: 2rem;
+            
+        }
+        
     }
 </style>
