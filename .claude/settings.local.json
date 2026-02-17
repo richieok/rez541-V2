@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(gh pr create:*)",
+      "Bash(gh pr merge:*)",
+      "Bash(git -C /Users/adolphusokoro/Documents/Docker/rez541-V2 status)",
+      "Bash(git -C /Users/adolphusokoro/Documents/Docker/rez541-V2 diff)",
+      "Bash(git -C /Users/adolphusokoro/Documents/Docker/rez541-V2 log --oneline -5)"
+    ]
+  }
+}
