@@ -8,7 +8,10 @@
       "Bash(gh pr merge:*)",
       "Bash(git -C /Users/adolphusokoro/Documents/Docker/rez541-V2 status)",
       "Bash(git -C /Users/adolphusokoro/Documents/Docker/rez541-V2 diff)",
-      "Bash(git -C /Users/adolphusokoro/Documents/Docker/rez541-V2 log --oneline -5)"
+      "Bash(git -C /Users/adolphusokoro/Documents/Docker/rez541-V2 log --oneline -5)",
+      "Skill(run)",
+      "Bash(docker compose *)",
+      "Bash(echo \"PID: $!\")"
     ]
   }
 }
