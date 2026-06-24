@@ -4,7 +4,7 @@
 </script>
 
 <div class="page-wrapper fade-in">
-    <div class="s-hero">
+    <!-- <div class="s-hero">
         <div class="bg-img">
             <img
                 src={signedUrls["public/spa/spa-lotus-plain.svg"]}
@@ -67,9 +67,8 @@
                 </div>
             </div>
         </section>
-        <!-- <img src={signedUrls["public/spa/spa-lotus-plain.svg"]} alt=""> -->
     </div>
-    <!-- <div>
+    <div>
         <section>
             <h2>Curated Treatments for Complete Wellness</h2>
             <p>
