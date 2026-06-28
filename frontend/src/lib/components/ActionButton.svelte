@@ -7,21 +7,22 @@
 <style>
     a {
         display: inline-block;
-        padding: clamp(.5rem, 2.5vw,0.8rem) 0.5rem;
-        /* background: linear-gradient(-45deg, #5638c0c6, #7b4cc66a); */
-        /* background-color: #785bd1; */
-        background-color: oklch(0.84 0.12 83.48);
-        text-decoration: none;
-        font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.75rem;
         font-weight: 700;
-        border-radius: 0.5rem;
-        box-shadow: 0 8px 10px rgba(0, 0, 0, 0.888);
-        overflow: hidden;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        /* line-height: 1; */
+        text-decoration: none;
+        color: hsl(30, 20%, 12%);
+        background: hsl(42, 55%, 60%);
+        padding: 0.65rem 1.4rem;
+        border-radius: 50px;
+        transition: background 0.2s, transform 0.15s;
+        line-height: 1;
     }
-    a:any-link {
-        color: black;
+
+    a:hover {
+        background: hsl(42, 55%, 52%);
+        transform: scale(1.04);
     }
 </style>

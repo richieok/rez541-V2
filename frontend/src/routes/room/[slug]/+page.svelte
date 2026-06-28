@@ -6,60 +6,118 @@
 </script>
 
 <svelte:head><title>{room.name}</title></svelte:head>
+
 <div class="page-wrapper fade-in">
+    <a href="/rooms" class="back-link">&#8592; All Rooms</a>
+
+    <header class="room-header">
+        <p class="eyebrow">Residence 541</p>
+        <h1>{room.name}</h1>
+    </header>
+
     <div class="gallery">
         {#if room?.imageList.length > 0}
             {#each room.imageList as uri}
-                <div>
-                    <img src={room.signedUrls[uri]} alt="" />
+                <div class="gallery-item">
+                    <img src={room.signedUrls[uri]} alt={room.name} />
                 </div>
             {/each}
         {/if}
     </div>
+
     <FixedBar>
-        <h1>{room.name}</h1>
-        <!-- <a class="book-button" href="/booking?roomId={room.id}">Book Now</a> -->
+        <span class="bar-name">{room.name}</span>
         <ActionButton href="/booking?roomId={room.id}" text="Book Now" />
     </FixedBar>
 </div>
 
 <style>
     .page-wrapper {
-        --pg-height: clamp(500px, calc(100vh - var(--header-height)), 800px);
-        min-height: var(--pg-height);
-        --gap: 1rem;
-        gap: var(--gap);
-        padding: var(--gap);
-        container-type: inline-size;
+        --gold: hsl(42, 55%, 60%);
+        --ink: hsl(30, 20%, 12%);
+        --cream: hsl(40, 30%, 96%);
+        background: var(--cream);
+        min-height: calc(100vh - var(--header-height));
+        padding: 0 1.25rem 8rem;
     }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-family: "Montserrat", sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--ink);
+        padding: 1rem 0 0;
+        opacity: 0.6;
+        transition: opacity 0.2s;
+    }
+
+    .back-link:hover {
+        opacity: 1;
+    }
+
+    .room-header {
+        text-align: center;
+        padding: clamp(2rem, 5vw, 3.5rem) 1rem 2rem;
+        border-bottom: 1px solid hsl(40, 20%, 86%);
+        margin-bottom: 2rem;
+    }
+
+    .eyebrow {
+        font-family: "Montserrat", sans-serif;
+        font-size: clamp(1.6rem, 5vw, 2.8rem);
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--gold);
+    }
+
+    h1 {
+        font-family: "Montserrat", sans-serif;
+        font-size: clamp(1.8rem, 5vw, 3rem);
+        font-weight: 700;
+        text-transform: capitalize;
+        color: var(--ink);
+        letter-spacing: -0.02em;
+        margin: 0;
+    }
+
     .gallery {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 450px));
-        justify-content: center;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 1rem;
+        max-width: 1000px;
+        margin: 0 auto;
     }
-    .gallery img {
+
+    .gallery-item img {
         width: 100%;
-        height: auto;
-        border-radius: 8px;
+        aspect-ratio: 4 / 3;
         object-fit: cover;
+        border-radius: 10px;
+        display: block;
+        transition: transform 0.3s ease;
     }
-    .book-button {
-        padding: 0.75rem 1.5rem;
-        font-size: 1rem;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        text-decoration: none;
+
+    .gallery-item:hover img {
+        transform: scale(1.02);
     }
-    .book-button:hover {
-        background-color: #0056b3;
+
+    .gallery-item {
+        overflow: hidden;
+        border-radius: 10px;
     }
-    h1 {
+
+    .bar-name {
+        font-family: "Montserrat", sans-serif;
+        font-size: clamp(0.9rem, 2vw, 1.1rem);
+        font-weight: 600;
         text-transform: capitalize;
-        font-size: clamp(1.3rem, 3vw, 2rem);
-        align-content: center;
+        color: #fff;
     }
 </style>

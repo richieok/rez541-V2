@@ -2,25 +2,24 @@
     let { children } = $props();
 </script>
 
-<div>
+<div class="fixed-bar">
     {@render children()}
 </div>
 
 <style>
-    div {
+    .fixed-bar {
         position: sticky;
+        bottom: 1.5rem;
         display: flex;
-        gap: 2rem;
-        place-content: center;
-        bottom: 1rem;
+        align-items: center;
+        gap: 1.5rem;
         width: fit-content;
-        /* background-color: oklch(from var(--header-background) calc(l + 20%) c h); */
-        background-color: var(--header-background);
+        margin: 2rem auto 0;
+        padding: 0.9rem 1.5rem;
+        background: hsl(30, 20%, 12%);
+        border-radius: 50px;
+        box-shadow: 0 8px 32px hsl(30, 20%, 8%, 0.35);
         color: white;
-        margin: 1rem auto 0;
-        padding: 1rem;
-        text-align: center;
         line-height: 1;
-        /* box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); */
     }
 </style>
