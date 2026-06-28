@@ -13,7 +13,10 @@
       "Bash(docker compose *)",
       "Bash(echo \"PID: $!\")",
       "Bash(chmod +x *)",
-      "Bash(./dev.sh *)"
+      "Bash(./dev.sh *)",
+      "Bash(git checkout *)",
+      "Bash(git merge *)",
+      "Bash(git branch *)"
     ]
   }
 }
