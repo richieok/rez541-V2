@@ -18,6 +18,7 @@
 </script>
 
 <div class="page fade-in">
+    <a href="/room/{roomId}" class="back-link">&#8592; Back</a>
     {#if dispForm}
         <form method="post">
             <div class="inputs">
@@ -63,6 +64,26 @@
     .page {
         min-height: 100vh;
         padding-top: 1rem;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-family: "Montserrat", sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: hsl(30, 20%, 12%);
+        padding: 1rem 0.7rem 0;
+        opacity: 0.6;
+        transition: opacity 0.2s;
+    }
+
+    .back-link:hover {
+        opacity: 1;
     }
     form {
         max-width: 500px;
