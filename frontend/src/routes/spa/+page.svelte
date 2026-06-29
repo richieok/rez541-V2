@@ -8,27 +8,27 @@
     const lotusImg = signedUrls?.[1];
 
     const treatments = [
-        { name: 'Swedish', duration: '30 mins', price: 30000 },
-        { name: 'Swedish', duration: '60 mins', price: 45000 },
+        { name: 'Swedish', duration: '30 mins', price: 45000 },
+        { name: 'Swedish', duration: '60 mins', price: 60000 },
         { name: 'Deep Tissue', duration: '1 hour', price: 60000 },
         { name: 'Deep Tissue', duration: '90 mins', price: 90000 },
         { name: 'Tension Relief', duration: '1 hour', price: 60000 },
         { name: 'Tension Relief', duration: '90 mins', price: 90000 },
-        { name: 'African Shea Butter', duration: '1 hour', price: 70000 },
-        { name: 'Pregnancy Massage', duration: '45 mins', price: 50000 },
+        { name: 'African Shea Butter', duration: '60 mins', price: 70000 },
+        { name: 'Pregnancy Massage', duration: '45 mins', price: 60000 },
         { name: 'Back, Neck & Shoulder', duration: '45 mins', price: 40000 },
         { name: 'Indian Head Massage', duration: '30 mins', price: 30000 },
         { name: 'Four Hands Massage', duration: '60 mins', price: 100000 },
-        { name: 'Hot Stone Massage', duration: '1.5 hours', price: 80000 },
-        { name: 'Thai Foot Massage', duration: '30 mins', price: 30000 },
+        { name: 'Hot Stone Massage', duration: '90 mins', price: 80000 },
+        { name: 'Calf and Foot Massage', duration: '30 mins', price: 30000 },
     ];
 
     const facials = [
-        { name: 'Express Facial', duration: '45 mins', price: 40000 },
-        { name: 'Hydrating Hyaluronic Facials', duration: '1 hr 15 mins', price: 60000 },
-        { name: 'Acne Treatment', duration: '1.5 hours', price: 60000 },
-        { name: 'Collagen Facial', duration: '1.5 hours', price: 65000 },
-        { name: 'Deep Cleansing Facials', duration: '1 hour', price: 50000 },
+        { name: 'Korean Express Facial (Dry to Combination skin)', duration: '45 mins', price: 40000 },
+        { name: 'Deep Cleanse Facial (Anti Acne)', duration: '60 mins', price: 50000 },
+        { name: 'Hydrating Hyaluronic Facial (Dry skin)', duration: '1 hr 15 mins', price: 70000 },
+        { name: 'Extra Glow Brightening Facial (All skin types)', duration: '1 hr 30 mins', price: 80000 },
+        { name: 'Anti Aging Collagen & Retinol Facial (all skin types)', duration: '1 hr 30 mins', price: 100000 },
     ];
 
     const waxing = [
@@ -49,61 +49,61 @@
         { name: 'Eyebrow Tweezing', price: 10000 },
         { name: 'Eyebrow Wax', price: 12000 },
         { name: 'Full Back & Shoulders', price: 36000 },
+        { name: 'Partial Back', price: 16000 },
     ];
 
     const nailCare = [
-        { name: 'Classic Manicure', price: 15000 },
-        { name: 'Mini Manicure', price: 10000 },
-        { name: 'Manicure with Gel Polish', price: 20000 },
+        { name: '541 Classic Manicure', price: 15000 },
+        { name: 'Classic Manicure with Gel Polish', price: 20000 },
         { name: 'Gel Polish On', price: 10000 },
-        { name: 'Removal of Gel', price: 8000 },
-        { name: '541 Spa Pedicure', price: 20000 },
-        { name: '541 Spa Pedicure with Gel', price: 25000 },
-        { name: 'Mini Pedicure', price: 15000 },
-        { name: '541 Pedicure with Happy Feet Mask', price: 20000 },
-        { name: 'Medical Pedicure', price: 25000 },
-        { name: '541 Pedicure with Coconut & Argan Oil', price: 50000 },
+        { name: 'Removal of Gel Polish', price: 8000 },
+        { name: '541 Classic Pedicure', price: 20000 },
+        { name: '541 Classic Pedicure with Gel Polish', price: 25000 },
+        { name: 'Express Pedicure', price: 10000 },
+        { name: 'Express Pedicure with Gel', price: 20000 },
+        { name: '541 Pedicure with Happy Feet Mask', price: 25000 },
+        { name: 'Medical Grade Pedicure (Corn Removal)', price: 50000 },
+        { name: '541 Pedicure with Coconut or Argan Oil Wrap', price: 30000 },
     ];
 
     const packages = [
         {
             name: 'Thermal Recovery Experience',
-            duration: '1.5 hours',
-            description: 'Includes relaxing massage, sauna and cold shower after.',
-            price: { single: 120000 },
-        },
-        {
-            name: '541 Serenity Ritual',
-            duration: '1.5 hours',
-            description: 'Includes steam, shower and full body massage.',
-            price: { single: 120000 },
-        },
-        {
-            name: 'Pure Calm Deep Detox',
-            duration: '2.5 hours',
-            description: 'Includes full body exfoliation, body wrap, sauna session and relaxing massage.',
+            duration: '180 mins',
+            description: 'Enjoying a hot Sauna or Steam session, a skin hydrating Shower, exfoliation and finish with a full body massage (Swedish or Deep Tissue).',
             price: { single: 150000 },
         },
         {
-            name: '541 Signature Retreat — Half Day',
-            duration: '12 hours',
-            description: 'Steam or Sauna, full body massage, express facial, Pedicure/manicure, one meal (breakfast, lunch or dinner) and complimentary room.',
-            price: { single: 150000, couple: 300000 },
+            name: 'Pure Calm Deep Detox',
+            duration: '210 mins',
+            description: 'Treat your body to a first Sauna session, full body exfoliation, a rich mask and body wrap, followed by a second sauna session, cleansing shower and a relaxing massage.',
+            price: { single: 200000 },
+        },
+        {
+            name: '541 Signature Retreat Premium Package',
+            description: 'Spend the night in our complimentary bedroom, pampered by our concierge. Enjoy the thermal recovery experience or traditional Moroccan Hammam, an express facial, pedicure.',
+            price: { single: 250000, couple: 450000 },
             featured: true,
         },
         {
-            name: '541 Signature Retreat — Full Day',
-            duration: '24 hours',
-            description: 'Steam or Sauna, full body massage, express facial, body scrub & wrap, Pedicure/manicure, meals & refreshments, complimentary room, pool and gym access.',
-            price: { single: 250000, couple: 400000 },
+            name: '541 Signature Retreat Luxury Escape Package',
+            description: 'Spend the night in our complimentary double bedroom, pampered by our concierge. Enjoy the thermal recovery experience or Moroccan Hammam of your choice, full body massage, facial of your choice, classic manicure and pedicure. End the day with an aromatherapy salt and candle bath and detoxifying or calming tea.',
+            price: { single: 400000, couple: 600000 },
             featured: true,
         },
     ];
 
     const hammam = [
-        { name: 'Traditional Sukla', price: 60000 },
-        { name: 'Extra Brightening', price: 90000 },
-        { name: 'Revitalizing', price: 70000 },
+        { name: 'Traditional Hammam', price: 60000 },
+        { name: 'Extra Brightening', price: 80000 },
+        { name: 'Soukla Hammam', price: 90000 },
+        { name: 'Hammam Body Wrap (add-on: argan or coconut oil & body serum polish)', price: 25000 },
+    ];
+
+    const wellness = [
+        { name: 'Yoga', description: 'Enjoy the calmness of our Yoga in our group classes.' },
+        { name: 'Nutrition Counselling', description: 'Review your diet and eating habits and learn the connections between eating right, great skin, good health and maintaining an optimal weight and self-confidence. Available for individuals and groups.' },
+        { name: 'Vitamin Infusion Therapy', description: 'Detoxify and increase your energy levels with our vitamin infusion mix to detoxify and increase energy levels (Vitamin C, Gluthathione, Vitamin B Complex, Alpha Lipoic Acid and Collagen).' },
     ];
 
     function fmt(n) {
@@ -119,6 +119,7 @@
         { id: 'nails', label: 'Nail Care' },
         { id: 'packages', label: 'Packages' },
         { id: 'hammam', label: 'Hammam' },
+        { id: 'wellness', label: 'Wellness' },
     ];
 
     function scrollTo(id) {
@@ -162,7 +163,7 @@
                 <img class="lotus" src={lotusImg} alt="" aria-hidden="true" />
             {/if}
             <p class="eyebrow">Experience · Restore · Renew</p>
-            <h1>The Spa <em>@ Residence 541</em></h1>
+            <h1>The Spa <em>@ 541</em></h1>
             <p class="tagline">A sanctuary of rest, ritual &amp; renewal</p>
         </div>
     </section>
@@ -178,6 +179,9 @@
             {/each}
         </div>
     </nav>
+
+    <!-- VAT notice -->
+    <p class="vat-notice">All prices are exclusive of 7.5% VAT</p>
 
     <!-- Service sections -->
     <div class="menu">
@@ -280,7 +284,9 @@
                         <div class="pkg-top">
                             <div>
                                 <h3>{pkg.name}</h3>
-                                <span class="pkg-duration">{pkg.duration}</span>
+                                {#if pkg.duration}
+                                    <span class="pkg-duration">{pkg.duration}</span>
+                                {/if}
                             </div>
                             {#if pkg.featured}
                                 <span class="pkg-badge">Signature</span>
@@ -325,6 +331,28 @@
                     </div>
                 {/each}
             </div>
+        </section>
+
+        <!-- Health & Wellness -->
+        <section id="wellness" class="menu-section">
+            <div class="section-header">
+                <div>
+                    <h2>Health &amp; Wellness</h2>
+                    <p class="section-sub">Holistic programmes for mind, body and vitality</p>
+                </div>
+            </div>
+            <div class="wellness-grid">
+                {#each wellness as item}
+                    <div class="wellness-card">
+                        <div class="wellness-top">
+                            <h3>{item.name}</h3>
+                            <span class="pkg-badge">By booking only</span>
+                        </div>
+                        <p class="pkg-desc">{item.description}</p>
+                    </div>
+                {/each}
+            </div>
+            <p class="wellness-note">Wellness services pricing available on package and booking requirements.</p>
         </section>
 
     </div>
@@ -481,6 +509,21 @@
     .category-nav button.active {
         color: var(--gold);
         border-bottom-color: var(--gold);
+    }
+
+    /* ── VAT notice ───────────────────────────────────── */
+    .vat-notice {
+        text-align: center;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+        background: hsl(42, 40%, 92%);
+        border-bottom: 1px solid var(--rule);
+        padding: 0.55rem 1rem;
+        margin: 0;
     }
 
     /* ── Menu wrapper ─────────────────────────────────── */
@@ -727,6 +770,56 @@
 
         .pkg-card.featured {
             grid-column: 1 / -1;
+        }
+    }
+
+    /* ── Wellness ─────────────────────────────────────── */
+    .wellness-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    .wellness-card {
+        background: #fff;
+        border: 1px solid var(--rule);
+        border-radius: 12px;
+        padding: 1.5rem 1.75rem;
+        display: grid;
+        gap: 0.75rem;
+        transition: box-shadow 0.2s;
+    }
+
+    .wellness-card:hover {
+        box-shadow: 0 4px 24px hsl(30, 20%, 15%, 0.08);
+    }
+
+    .wellness-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .wellness-card h3 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: -0.01em;
+        color: var(--ink);
+    }
+
+    .wellness-note {
+        margin-top: 1.5rem;
+        font-size: 0.82rem;
+        font-style: italic;
+        color: var(--ink-soft);
+    }
+
+    @media (min-width: 600px) {
+        .wellness-grid {
+            grid-template-columns: 1fr 1fr 1fr;
         }
     }
 </style>
