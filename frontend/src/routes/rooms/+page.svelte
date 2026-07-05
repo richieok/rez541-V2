@@ -2,6 +2,7 @@
     import { resolve } from "$app/paths";
     import RoomCards from "$lib/components/RoomCards.svelte";
     import { onMount } from "svelte";
+    import { preloadImages } from "$lib/utils/images.js";
 
     const { data } = $props();
     let rooms = $state(data.rooms);
@@ -31,23 +32,14 @@
         }
     }
 
-    function preloadImage(src) {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.onload = resolve;
-            img.onerror = resolve;
-            img.src = src;
-        });
-    }
-
     // Wait for each room's cover photo (the only one visible before the
     // carousel is scrolled) to finish loading before revealing any cards, so
     // they don't pop in one at a time as their images download.
     async function preloadCoverImages(rooms) {
-        const coverSrcs = rooms
-            .map((room) => room.signedUrlObj?.[room.imageList?.[0]])
-            .filter(Boolean);
-        await Promise.all(coverSrcs.map(preloadImage));
+        const coverSrcs = rooms.map(
+            (room) => room.signedUrlObj?.[room.imageList?.[0]],
+        );
+        await preloadImages(coverSrcs);
     }
 
     onMount(async () => {
