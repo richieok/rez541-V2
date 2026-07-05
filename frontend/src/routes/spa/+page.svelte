@@ -1,5 +1,5 @@
 <script>
-    import { onMount } from 'svelte';
+    import { onMount } from "svelte";
     import { preloadImages } from "$lib/utils/images.js";
     import { cacheSignedUrls } from "$lib/utils/signedUrlCache.js";
 
@@ -84,11 +84,10 @@
             <div class="overlay"></div>
             <div class="hero-content">
                 <img class="lotus" src={lotusSrc} alt="" />
-                <p class="eyebrow">Residence 541</p>
-                <h1>Spa &amp; <em>Wellness</em></h1>
-                <p class="tagline">
-                    A sanctuary of rest, ritual & renewal.
-                </p>
+                <p class="eyebrow">Spa &amp; Wellness</p>
+                <!-- <h1>Spa &amp; <em>Wellness</em></h1> -->
+                <h1>The Spa <em>@ 541</em></h1>
+                <p class="tagline">A sanctuary of rest, ritual & renewal.</p>
             </div>
         </section>
     {:else}
@@ -115,7 +114,9 @@
         <div class="services-grid">
             {#each serviceCategories as category}
                 <a class="service-card" href="/spa/service-menu#{category.id}">
-                    <div class="service-icon"><i class={category.icon}></i></div>
+                    <div class="service-icon">
+                        <i class={category.icon}></i>
+                    </div>
                     <h3>{category.title}</h3>
                     <p>{category.description}</p>
                     <span class="service-link">View Menu &rarr;</span>
@@ -187,8 +188,14 @@
     }
 
     @keyframes hero-rise {
-        from { opacity: 0; transform: translateY(24px); }
-        to   { opacity: 1; transform: translateY(0); }
+        from {
+            opacity: 0;
+            transform: translateY(24px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     /* ── Loading skeletons ────────────────────────────── */
@@ -214,8 +221,12 @@
     }
 
     @keyframes shimmer {
-        0% { background-position: 200% 0; }
-        100% { background-position: -200% 0; }
+        0% {
+            background-position: 200% 0;
+        }
+        100% {
+            background-position: -200% 0;
+        }
     }
 
     /* ── Gallery ──────────────────────────────────────── */
@@ -250,7 +261,8 @@
     .lotus {
         width: clamp(40px, 7vw, 70px);
         opacity: 0.85;
-        filter: invert(1) sepia(1) saturate(0.5) hue-rotate(5deg) brightness(1.3);
+        filter: invert(1) sepia(1) saturate(0.5) hue-rotate(5deg)
+            brightness(1.3);
         margin-bottom: 0.4rem;
     }
 
@@ -331,7 +343,9 @@
         padding: 1.75rem;
         text-decoration: none;
         color: inherit;
-        transition: box-shadow 0.2s, transform 0.15s;
+        transition:
+            box-shadow 0.2s,
+            transform 0.15s;
     }
 
     .service-card:hover {
