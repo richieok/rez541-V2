@@ -1,102 +1,182 @@
 <script>
+    import KeyTag from "$lib/components/KeyTag.svelte";
     let { src = "" } = $props();
 </script>
 
 <div class="hero">
-    <div class="hero-img">
-        <img {src} alt="Residence 541 bedroom" />
+    <div class="content">
+        <div class="reveal r1"><KeyTag text="Plot 541 · Wuye, Abuja" /></div>
+        <h1 class="reveal r2">
+            <span class="kicker">Residence</span>
+            <span class="numeral">541.</span>
+        </h1>
+        <p class="reveal r3">A quiet address in the capital.</p>
+        <div class="actions reveal r4">
+            <a class="cta" href="/rooms">Book Now</a>
+            <a class="ghost-link" href="#about">Explore the residence ↓</a>
+        </div>
     </div>
-    <div class="banner">
-        <h2 class="m2">Welcome to</h2>
-        <h1 class="m1">Residence 541</h1>
-        <h2 class="m2">Your Perfect stay awaits you</h2>
-        <a class="hero-button" href="/rooms">Book Now</a>
+    <div class="photo">
+        <img {src} alt="Residence 541 reception" />
     </div>
 </div>
 
 <style>
     .hero {
-        /* height: max(calc(100vh - var(--header-height)), 500px); */
-        max-width: var(--pg-w-max);
-        height: clamp(500px, calc(100vh - var(--header-height)), 800px);
         display: grid;
-        padding: 1rem 1rem 0.5rem;
-        grid-template-columns: 1fr clamp(300px, 50%, 600px) 1fr;
-        grid-template-rows: 1fr 1fr;
-        font-family: "Montserrat", sans-serif;
+        grid-template-columns: 1fr;
+        grid-template-rows: min(46vh, 360px) auto;
+        max-width: var(--pg-w-max);
         margin: 0 auto;
     }
 
-    .hero-img {
-        grid-column: 1 / span 3;
-        grid-row: 1 / span 2;
+    .photo {
+        grid-row: 1;
         overflow: hidden;
         > img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center center;
+            object-position: center 30%;
         }
     }
 
-    .banner {
-        grid-column: 2 / span 1;
-        grid-row: 2 / span 1;
-        align-self: center;
-        text-align: center;
-        color: white;
-        line-height: 1.2;
-        backdrop-filter: blur(3px);
-
-        > h1,
-        h2 {
-            text-shadow: 0 0 10px black;
-            /* text-shadow:
-                2px 2px 4px rgba(0, 0, 0, 0.8),
-                -1px -1px 0 black,
-                1px -1px 0 black,
-                -1px 1px 0 black,
-                1px 1px 0 black; */
-        }
-        & .m1 {
-            /* font-size: 2.2rem; */
-            color: white;
-            font-size: clamp(2.3rem, 5vw, 3rem);
-            line-height: 1.2;
-        }
-        & .m2 {
-            /* font-size: 1rem; */
-            font-size: clamp(1.3rem, 5vw, 2rem);
-        }
+    .content {
+        grid-row: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.9rem;
+        padding: 2.25rem 1.5rem 2.75rem;
+        font-family: "Open Sans", sans-serif;
     }
 
-    .hero-button {
-        display: inline-block;
-        margin-top: 1em;
-        padding: 0.8em 0.5em;
-        /* background: linear-gradient(-45deg, #5638c0c6, #7b4cc66a); */
-        /* background-color: #785bd1; */
-        background-color: oklch(0.84 0.12 83.48);
-        text-decoration: none;
-        font-size: 1.5rem;
-        font-weight: 700;
-        border-radius: 0.5em;
-        box-shadow: 0 8px 10px rgba(0, 0, 0, 0.888);
-        /* transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); */
-        /* position: relative; */
-        overflow: hidden;
+    h1 {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        line-height: 0.95;
+    }
+
+    .kicker {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: 0.2em;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        line-height: 1;
+        color: hsl(30, 12%, 40%);
     }
 
-    .hero-button:any-link {
-        color: black;
+    .numeral {
+        font-family: var(--font-display);
+        font-optical-sizing: auto;
+        font-size: clamp(4rem, 18vw, 6rem);
+        font-weight: 600;
+        color: var(--clr-ink);
+        letter-spacing: -0.02em;
     }
 
-    @container (width > 1199px) {
+    .content p {
+        font-size: 1.15rem;
+        color: hsl(30, 12%, 35%);
+        margin: 0;
+        max-width: 32ch;
+    }
+
+    .actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .cta {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--clr-ink);
+        background: var(--clr-gold);
+        border-radius: 8px;
+        padding: 0.9rem 1.6rem;
+        transition: background 0.2s, transform 0.15s;
+    }
+
+    .cta:hover {
+        background: var(--clr-brass);
+        color: white;
+        transform: translateY(-1px);
+    }
+
+    .ghost-link {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        color: var(--clr-ink);
+        text-decoration: none;
+        opacity: 0.65;
+        border-bottom: 1px solid transparent;
+        transition: opacity 0.2s, border-color 0.2s;
+    }
+
+    .ghost-link:hover {
+        opacity: 1;
+        border-color: var(--clr-gold);
+    }
+
+    .reveal {
+        opacity: 0;
+        animation: rise 0.6s ease-out forwards;
+    }
+    .r1 {
+        animation-delay: 0.05s;
+    }
+    .r2 {
+        animation-delay: 0.15s;
+    }
+    .r3 {
+        animation-delay: 0.3s;
+    }
+    .r4 {
+        animation-delay: 0.45s;
+    }
+
+    @keyframes rise {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .reveal {
+            animation: none;
+            opacity: 1;
+        }
+    }
+
+    @container (width > 700px) {
         .hero {
-            padding: 1rem 0 0.5rem;
+            grid-template-columns: minmax(320px, 42%) 1fr;
+            grid-template-rows: min(85vh, 720px);
+        }
+        .photo {
+            grid-row: 1;
+            grid-column: 2;
+        }
+        .content {
+            grid-row: 1;
+            grid-column: 1;
+            justify-content: center;
+            padding: 2rem 2rem;
         }
     }
 </style>
