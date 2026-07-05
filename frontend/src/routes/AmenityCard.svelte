@@ -1,61 +1,68 @@
 <script>
     let {
-        icon = "❌",
+        icon = "fa-solid fa-circle",
         title = "No title",
         description = "No description",
     } = $props();
 </script>
 
 <div class="amenity-card">
-    <!-- <div class="icon">{icon}</div> -->
-     <div class="icon"><i class={icon}></i></div>
-    <h3 class="title">{title}</h3>
-    <p class="description">{description}</p>
+    <div class="icon"><i class={icon}></i></div>
+    <div class="copy">
+        <h3 class="title">{title}</h3>
+        <p class="description">{description}</p>
+    </div>
 </div>
 
 <style>
     .amenity-card {
-        display: grid;
-        grid-template-rows: subgrid;
-        grid-row: span 3;
-        gap: 0;
-        text-align: center;
-        padding: 1rem 1rem;
-        border-radius: 10px;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        background: #ffffff;
-        border: 2px solid #e8e8e8cc;
+        display: flex;
+        align-items: flex-start;
+        gap: 1.1rem;
+        padding: 1.75rem 1.5rem;
+        border-bottom: 1px solid var(--clr-hairline);
+        transition: background 0.2s ease;
     }
+
+    .amenity-card:hover {
+        background: hsl(42, 55%, 92%, 0.5);
+    }
+
     .icon {
-        width: 80px;
-        height: 80px;
-        margin: 0 auto 25px;
-        /* background: linear-gradient(135deg, #d4af37 0%, #f4d03fb1 100%); */
+        flex-shrink: 0;
+        width: 2.75rem;
+        height: 2.75rem;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 36px;
-        transition: all 0.3s ease;
-        > i {
-            width: fit-content;
-            height: fit-content;
-        }
+        font-size: 1.05rem;
+        color: var(--clr-brass);
+        background: hsl(42, 55%, 65%, 0.14);
+        border: 1px solid hsl(42, 55%, 65%, 0.32);
     }
+
+    .copy {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+
     h3 {
         font-family: "Montserrat", sans-serif;
         font-weight: 600;
-        font-size: 20px;
-        color: #2c3e50;
-        margin-bottom: 12px;
-        letter-spacing: 0.3px;
+        font-size: 1.05rem;
+        color: var(--clr-ink);
+        margin: 0;
+        letter-spacing: 0.01em;
     }
+
     p {
         font-family: "Open Sans", sans-serif;
         font-weight: 400;
-        font-size: 15px;
-        color: #666;
-        line-height: 1.6;
+        font-size: 0.92rem;
+        color: hsl(30, 10%, 42%);
+        line-height: 1.55;
+        margin: 0;
     }
 </style>

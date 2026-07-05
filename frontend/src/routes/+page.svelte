@@ -2,13 +2,13 @@
     import Hero from "./Hero.svelte";
     import FeatAmenities from "./FeatAmenities.svelte";
     import LocationInfo from "$lib/components/LocationInfo.svelte";
+    import KeyTag from "$lib/components/KeyTag.svelte";
     import { onMount } from "svelte";
     import { preloadImages } from "$lib/utils/images.js";
     import { cacheSignedUrls } from "$lib/utils/signedUrlCache.js";
 
     let { data } = $props();
     let { signedUrls, amenitiesDataArray } = data;
-    // console.log(data.signedUrls)
 
     let imagesReady = $state(false);
     const heroSrc = signedUrls?.["public/spa/reception3.jpg"];
@@ -25,7 +25,7 @@
 </script>
 
 <svelte:head><title>Home</title></svelte:head>
-<div class="fade-in">
+<div class="page fade-in">
     {#if imagesReady}
         <div class="fade-in">
             <Hero src={heroSrc} />
@@ -34,47 +34,71 @@
         <div class="hero-skeleton"></div>
     {/if}
 
-    <div class="section">
-        <div class="x-layout">
-            <div class="img-frame pos-1">
-                {#if imagesReady}
-                    <img src={livingRoomSrc} alt="" class="fade-in" />
-                {:else}
-                    <div class="skeleton-block"></div>
-                {/if}
-            </div>
-            <div class="img-frame pos-3">
-                {#if imagesReady}
-                    <img src={exteriorSrc} alt="" class="fade-in" />
-                {:else}
-                    <div class="skeleton-block"></div>
-                {/if}
-            </div>
-            <div>
-                <p class="message">
-                    At Residence 541, we believe our guests deserve more than
-                    just a place to stay, they deserve a great experience. From
-                    therapeutic spa treatments to personalized services, we've
-                    created a space where memories are made and spirits are
-                    renewed.
-                </p>
-            </div>
+    <section class="about" id="about">
+        <div class="about-text">
+            <KeyTag text="The Residence" />
+            <p class="quote">
+                <span class="mark">&ldquo;</span>At Residence 541, we believe our
+                guests deserve more than just a place to stay, they deserve a
+                great experience. From therapeutic spa treatments to
+                personalized services, we've created a space where memories
+                are made and spirits are renewed.
+            </p>
         </div>
-    </div>
-    <div class="max-w">
-        <FeatAmenities cardDataArray={amenitiesDataArray} />
-    </div>
-    <div class="max-w">
-        <LocationInfo/>
-    </div>
+        <div class="about-collage">
+            <figure class="collage-a">
+                {#if imagesReady}
+                    <img
+                        src={livingRoomSrc}
+                        alt="Living room in a three-bedroom suite"
+                        class="fade-in"
+                    />
+                {:else}
+                    <div class="skeleton-block"></div>
+                {/if}
+                <figcaption>Three-Bedroom Suite &mdash; Living Room</figcaption>
+            </figure>
+            <figure class="collage-b">
+                {#if imagesReady}
+                    <img
+                        src={exteriorSrc}
+                        alt="Exterior view of Residence 541, Block One"
+                        class="fade-in"
+                    />
+                {:else}
+                    <div class="skeleton-block"></div>
+                {/if}
+                <figcaption>Block One &mdash; Exterior</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <section class="amenities-section" id="amenities">
+        <div class="section-head">
+            <KeyTag text="Amenities" />
+            <h2>Everything you need, close at hand.</h2>
+        </div>
+        <div class="max-w">
+            <FeatAmenities cardDataArray={amenitiesDataArray} />
+        </div>
+    </section>
+
+    <section class="location-section" id="find-us">
+        <div class="max-w">
+            <LocationInfo />
+        </div>
+    </section>
 </div>
 
 <style>
+    .page {
+        background: var(--clr-cream);
+    }
+
     .hero-skeleton {
         max-width: var(--pg-w-max);
         height: clamp(500px, calc(100vh - var(--header-height)), 800px);
         margin: 0 auto;
-        padding: 1rem 1rem 0.5rem;
         box-sizing: border-box;
     }
 
@@ -104,94 +128,135 @@
         }
     }
 
-    .section {
-        height: max(calc(100vh - var(--header-height)), 500px);
-        /* max-width: var(--pg-w-max); */
-        container-type: inline-size;
-        padding: 0.5rem 1rem;
+    .about {
+        max-width: var(--pg-w-max);
         margin: 0 auto;
+        padding: 4rem 1.5rem 5rem;
+        display: grid;
+        gap: 3rem;
     }
 
-    .img-frame {
+    .about-text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.4rem;
+    }
+
+    .quote {
+        font-family: var(--font-display);
+        font-optical-sizing: auto;
+        font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+        font-weight: 400;
+        font-style: italic;
+        line-height: 1.5;
+        color: var(--clr-ink);
+        margin: 0;
+        max-width: 46ch;
+    }
+
+    .mark {
+        font-family: var(--font-display);
+        font-style: normal;
+        font-size: 2.2rem;
+        color: var(--clr-gold);
+        line-height: 0;
+        vertical-align: -0.35em;
+        margin-right: 0.05em;
+    }
+
+    .about-collage {
+        position: relative;
+        aspect-ratio: 5 / 4;
+        margin-bottom: 2rem;
+    }
+
+    .about-collage figure {
+        margin: 0;
+        position: absolute;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px hsl(30, 20%, 15%, 0.16);
+    }
+
+    .collage-a {
+        top: 0;
+        left: 0;
+        width: 76%;
+        aspect-ratio: 4 / 3;
+    }
+
+    .collage-b {
+        bottom: -2rem;
+        right: 0;
+        width: 50%;
+        aspect-ratio: 4 / 3;
+        border: 5px solid var(--clr-cream);
+        z-index: 1;
+    }
+
+    .about-collage img,
+    .about-collage .skeleton-block {
         width: 100%;
         height: 100%;
-        overflow: hidden;
-
-        > img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center center;
-        }
+        object-fit: cover;
+        display: block;
     }
 
-    .x-layout {
-        display: grid;
-        height: 100%;
-        /* max-width: var(--pg-w-max); */
-        grid-template-columns: repeat(2, 50%);
-        grid-template-rows: auto 1fr;
-        overflow: hidden;
-        margin: 0 auto;
-        /* gap: 1rem; */
-        /* > div {
-            padding: 0 1rem;
-        } */
+    figcaption {
+        position: absolute;
+        inset: auto 0 0 0;
+        padding: 0.6rem 0.8rem;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: white;
+        background: linear-gradient(
+            to top,
+            hsl(30, 20%, 10%, 0.6),
+            transparent
+        );
     }
 
-    .pos-1 {
-        display: none;
+    .amenities-section {
+        background: var(--clr-cream-deep);
+        padding: 4rem 1.5rem;
     }
 
-    .pos-3 {
-        grid-column: 1 / span 2;
-        grid-row: 2 / span 1;
-        > img {
-            object-position: bottom center;
-        }
-    }
-
-    div:has(> .message) {
-        display: grid;
-        grid-column: 1 / span 2;
-        place-content: center;
-        /* padding: 2rem 1rem; */
-    }
-
-    .message {
-        font-size: 1.4rem;
-        font-weight: 400;
-        line-height: 1.4;
+    .section-head {
+        max-width: var(--pg-w-max);
+        margin: 0 auto 2.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.9rem;
         text-align: center;
-        padding: 0.5rem 1rem;
-        /* margin: .5rem 1rem .5rem .5rem;
-        box-shadow: 2px 2px 5px oklab(86.68599999999999% 0 -0.0001);
-        border-radius: 10px; */
+    }
+
+    .section-head h2 {
+        font-family: var(--font-display);
+        font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+        font-weight: 600;
+        color: var(--clr-ink);
+        margin: 0;
+    }
+
+    .location-section {
+        padding: 4rem 1.5rem 5rem;
+    }
+
+    .max-w {
+        max-width: var(--pg-w-max);
+        margin: 0 auto;
     }
 
     @container (width > 700px) {
-        .pos-1 {
-            display: block;
-            grid-column: 1 / span 1;
-            grid-row: 1 / span 2;
-            padding-left: 0;
-            padding-right: 0.5rem;
-        }
-
-        .pos-3 {
-            grid-column: 2 / span 1;
-            grid-row: 2 / span 1;
-            padding-right: 0;
-            padding-left: 0.5rem;
-        }
-        div:has(> .message) {
-            grid-column: 2 / span 1;
-            grid-row: 1 / span 1;
-        }
-    }
-    @container ( width > 1199px) {
-        .section {
-            padding: 0.5rem 0;
+        .about {
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 4rem;
         }
     }
 </style>

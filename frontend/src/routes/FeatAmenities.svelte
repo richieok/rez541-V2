@@ -3,19 +3,25 @@
     let { cardDataArray = [] } = $props();
 </script>
 
-<div>
+<div class="amenities-list">
     {#each cardDataArray as cardData}
-        <AmenityCard {...cardData}/>
+        <AmenityCard {...cardData} />
     {/each}
 </div>
 
 <style>
-    div {
+    .amenities-list {
         display: grid;
-        grid-template-columns: repeat(auto-fit, 250px);
-        grid-template-rows: auto auto auto;
-        padding: 2rem 1rem;
-        gap: 3rem;
-        justify-content: center;
+        grid-template-columns: 1fr;
+        border-top: 1px solid var(--clr-hairline);
+    }
+
+    @container (width > 640px) {
+        .amenities-list {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .amenities-list > :global(.amenity-card:nth-child(odd)) {
+            border-right: 1px solid var(--clr-hairline);
+        }
     }
 </style>
