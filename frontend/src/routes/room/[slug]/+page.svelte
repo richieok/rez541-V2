@@ -1,8 +1,17 @@
 <script>
     import FixedBar from "$lib/components/FixedBar.svelte";
     import ActionButton from "$lib/components/ActionButton.svelte";
+    import { onMount } from "svelte";
+    import { preloadImages } from "$lib/utils/images.js";
     let { data } = $props();
     let room = data.room;
+    let imagesReady = $state(false);
+
+    onMount(async () => {
+        const srcs = (room?.imageList ?? []).map((uri) => room.signedUrls[uri]);
+        await preloadImages(srcs);
+        imagesReady = true;
+    });
 </script>
 
 <svelte:head><title>{room.name}</title></svelte:head>
@@ -15,15 +24,23 @@
         <h1>{room.name}</h1>
     </header>
 
-    <div class="gallery">
-        {#if room?.imageList.length > 0}
-            {#each room.imageList as uri}
-                <div class="gallery-item">
-                    <img src={room.signedUrls[uri]} alt={room.name} />
-                </div>
+    {#if imagesReady}
+        <div class="gallery fade-in">
+            {#if room?.imageList.length > 0}
+                {#each room.imageList as uri}
+                    <div class="gallery-item">
+                        <img src={room.signedUrls[uri]} alt={room.name} />
+                    </div>
+                {/each}
+            {/if}
+        </div>
+    {:else}
+        <div class="gallery">
+            {#each room?.imageList ?? [] as _}
+                <div class="gallery-item-skeleton"></div>
             {/each}
-        {/if}
-    </div>
+        </div>
+    {/if}
 
     <FixedBar>
         <span class="bar-name">{room.name}</span>
@@ -111,6 +128,29 @@
     .gallery-item {
         overflow: hidden;
         border-radius: 10px;
+    }
+
+    .gallery-item-skeleton {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        border-radius: 10px;
+        background: linear-gradient(
+            90deg,
+            hsl(40, 20%, 92%) 25%,
+            hsl(40, 25%, 96%) 50%,
+            hsl(40, 20%, 92%) 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.4s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: 200% 0;
+        }
+        100% {
+            background-position: -200% 0;
+        }
     }
 
     .bar-name {

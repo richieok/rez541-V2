@@ -2,9 +2,11 @@
     import { resolve } from "$app/paths";
     import RoomCards from "$lib/components/RoomCards.svelte";
     import { onMount } from "svelte";
+    import { preloadImages } from "$lib/utils/images.js";
 
     const { data } = $props();
     let rooms = $state(data.rooms);
+    let imagesReady = $state(false);
 
     async function signImages(imgArray = []) {
         let res = await fetch("/app/signurls", {
@@ -30,12 +32,20 @@
         }
     }
 
+    // Wait for each room's cover photo (the only one visible before the
+    // carousel is scrolled) to finish loading before revealing any cards, so
+    // they don't pop in one at a time as their images download.
+    async function preloadCoverImages(rooms) {
+        const coverSrcs = rooms.map(
+            (room) => room.signedUrlObj?.[room.imageList?.[0]],
+        );
+        await preloadImages(coverSrcs);
+    }
+
     onMount(async () => {
         await procRooms(rooms);
-        // console.log($state.snapshot(rooms));
-        // console.log(
-        //     rooms[0].imageList.map((img) => rooms[0].signedUrlObj[img]),
-        // );
+        await preloadCoverImages(rooms);
+        imagesReady = true;
     });
 </script>
 
@@ -48,18 +58,34 @@
         <p class="subtitle">Select a room to view details and make a reservation</p>
     </header>
 
-    <div class="room-wrapper">
-        {#each rooms as aptInfo}
-            <RoomCards
-                name={aptInfo.name}
-                price={aptInfo.pricePerNight}
-                id={aptInfo.id}
-                images={aptInfo.signedUrlObj
-                    ? aptInfo.imageList.map((img) => aptInfo.signedUrlObj[img])
-                    : []}
-            />
-        {/each}
-    </div>
+    {#if imagesReady}
+        <div class="room-wrapper fade-in">
+            {#each rooms as aptInfo}
+                <RoomCards
+                    name={aptInfo.name}
+                    price={aptInfo.pricePerNight}
+                    id={aptInfo.id}
+                    images={aptInfo.signedUrlObj
+                        ? aptInfo.imageList.map(
+                              (img) => aptInfo.signedUrlObj[img],
+                          )
+                        : []}
+                />
+            {/each}
+        </div>
+    {:else}
+        <div class="room-wrapper">
+            {#each rooms as _}
+                <div class="room-card-skeleton">
+                    <div class="skeleton-media"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-line skeleton-title"></div>
+                        <div class="skeleton-line skeleton-price"></div>
+                    </div>
+                </div>
+            {/each}
+        </div>
+    {/if}
 </div>
 
 <style>
@@ -120,5 +146,61 @@
         grid-template-columns: repeat(auto-fit, 350px);
         justify-content: center;
         gap: 1.75rem;
+    }
+
+    .room-card-skeleton {
+        width: 350px;
+        background: #fff;
+        border: 1px solid hsl(40, 20%, 88%);
+        border-radius: 14px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .skeleton-media {
+        aspect-ratio: 4 / 3;
+    }
+
+    .skeleton-body {
+        padding: 1.1rem 1.25rem 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .skeleton-line {
+        border-radius: 6px;
+    }
+
+    .skeleton-title {
+        width: 60%;
+        height: 1.1rem;
+    }
+
+    .skeleton-price {
+        width: 35%;
+        height: 0.9rem;
+    }
+
+    .skeleton-media,
+    .skeleton-line {
+        background: linear-gradient(
+            90deg,
+            hsl(40, 20%, 92%) 25%,
+            hsl(40, 25%, 96%) 50%,
+            hsl(40, 20%, 92%) 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.4s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: 200% 0;
+        }
+        100% {
+            background-position: -200% 0;
+        }
     }
 </style>
