@@ -56,7 +56,6 @@
                 {:else}
                     <div class="skeleton-block"></div>
                 {/if}
-                <figcaption>Three-Bedroom Suite &mdash; Living Room</figcaption>
             </figure>
             <figure class="collage-b">
                 {#if imagesReady}
@@ -68,7 +67,6 @@
                 {:else}
                     <div class="skeleton-block"></div>
                 {/if}
-                <figcaption>Block One &mdash; Exterior</figcaption>
             </figure>
         </div>
     </section>
@@ -201,23 +199,6 @@
         height: 100%;
         object-fit: cover;
         display: block;
-    }
-
-    figcaption {
-        position: absolute;
-        inset: auto 0 0 0;
-        padding: 0.6rem 0.8rem;
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.65rem;
-        font-weight: 600;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        color: white;
-        background: linear-gradient(
-            to top,
-            hsl(30, 20%, 10%, 0.6),
-            transparent
-        );
     }
 
     .amenities-section {
