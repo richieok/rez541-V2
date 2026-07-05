@@ -3,11 +3,15 @@
     import ActionButton from "$lib/components/ActionButton.svelte";
     import { onMount } from "svelte";
     import { preloadImages } from "$lib/utils/images.js";
+    import { cacheSignedUrls } from "$lib/utils/signedUrlCache.js";
     let { data } = $props();
     let room = data.room;
     let imagesReady = $state(false);
 
     onMount(async () => {
+        // These URLs are already signed server-side; cache them too so the
+        // /rooms listing can reuse them instead of re-signing.
+        cacheSignedUrls(room?.signedUrls);
         const srcs = (room?.imageList ?? []).map((uri) => room.signedUrls[uri]);
         await preloadImages(srcs);
         imagesReady = true;

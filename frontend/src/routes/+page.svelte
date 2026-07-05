@@ -2,28 +2,53 @@
     import Hero from "./Hero.svelte";
     import FeatAmenities from "./FeatAmenities.svelte";
     import LocationInfo from "$lib/components/LocationInfo.svelte";
+    import { onMount } from "svelte";
+    import { preloadImages } from "$lib/utils/images.js";
+    import { cacheSignedUrls } from "$lib/utils/signedUrlCache.js";
+
     let { data } = $props();
     let { signedUrls, amenitiesDataArray } = data;
     // console.log(data.signedUrls)
+
+    let imagesReady = $state(false);
+    const heroSrc = signedUrls?.["public/spa/reception3.jpg"];
+    const livingRoomSrc = signedUrls?.["public/3-bed-suite/living-room-3-bed.jpg"];
+    const exteriorSrc = signedUrls?.["public/exterior/block1-view-800w.jpg"];
+
+    onMount(async () => {
+        // These URLs are already signed server-side; cache them so other
+        // pages (e.g. /rooms) can reuse them instead of re-signing.
+        cacheSignedUrls(signedUrls);
+        await preloadImages([heroSrc, livingRoomSrc, exteriorSrc]);
+        imagesReady = true;
+    });
 </script>
 
 <svelte:head><title>Home</title></svelte:head>
 <div class="fade-in">
-    <Hero src={signedUrls["public/spa/reception3.jpg"]} />
+    {#if imagesReady}
+        <div class="fade-in">
+            <Hero src={heroSrc} />
+        </div>
+    {:else}
+        <div class="hero-skeleton"></div>
+    {/if}
 
     <div class="section">
         <div class="x-layout">
             <div class="img-frame pos-1">
-                <img
-                    src={signedUrls["public/3-bed-suite/living-room-3-bed.jpg"]}
-                    alt=""
-                />
+                {#if imagesReady}
+                    <img src={livingRoomSrc} alt="" class="fade-in" />
+                {:else}
+                    <div class="skeleton-block"></div>
+                {/if}
             </div>
             <div class="img-frame pos-3">
-                <img
-                    src={signedUrls["public/exterior/block1-view-800w.jpg"]}
-                    alt=""
-                />
+                {#if imagesReady}
+                    <img src={exteriorSrc} alt="" class="fade-in" />
+                {:else}
+                    <div class="skeleton-block"></div>
+                {/if}
             </div>
             <div>
                 <p class="message">
@@ -45,6 +70,40 @@
 </div>
 
 <style>
+    .hero-skeleton {
+        max-width: var(--pg-w-max);
+        height: clamp(500px, calc(100vh - var(--header-height)), 800px);
+        margin: 0 auto;
+        padding: 1rem 1rem 0.5rem;
+        box-sizing: border-box;
+    }
+
+    .hero-skeleton,
+    .skeleton-block {
+        background: linear-gradient(
+            90deg,
+            hsl(40, 20%, 92%) 25%,
+            hsl(40, 25%, 96%) 50%,
+            hsl(40, 20%, 92%) 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.4s ease-in-out infinite;
+    }
+
+    .skeleton-block {
+        width: 100%;
+        height: 100%;
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: 200% 0;
+        }
+        100% {
+            background-position: -200% 0;
+        }
+    }
+
     .section {
         height: max(calc(100vh - var(--header-height)), 500px);
         /* max-width: var(--pg-w-max); */
