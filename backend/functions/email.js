@@ -5,6 +5,7 @@ const fromAddress = "admin@residence541.com"
 const domain = process.env.DOMAIN || "localhost:5173"
 const proto = process.env.DOMAIN ? "https" : "http"
 let confirmUrl = `${proto}://${domain}/booking-conf?token=`
+let spaConfirmUrl = `${proto}://${domain}/spa/booking-conf?token=`
 // console.log(`confirmUrl: ${confirmUrl}`)
 
 const TEST_EMAIL = "richie.okoro@gmail.com";
@@ -299,4 +300,176 @@ function generateBookingEmailHTML(data) {
 </body>
 </html>
   `;
+}
+function formatSpaSlot(startsAt, durationMinutes) {
+  const date = new Date(startsAt)
+  const day = date.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })
+  const time = `${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}`
+  return `${day} at ${time} (${durationMinutes} mins)`
+}
+
+function generateSpaBookingEmailHTML(booking) {
+  const verificationLink = `${spaConfirmUrl}${booking.token}`
+  const slot = formatSpaSlot(booking.startsAt, booking.durationMinutes)
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Spa Booking Verification</title></head>
+<body style="margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; background-color: #f7f3ec;">
+  <table role="presentation" style="width: 100%; max-width: 600px; margin: 0 auto; border-collapse: collapse; background-color: #ffffff;">
+    <tr>
+      <td style="background-color: #2b241c; padding: 36px 30px; text-align: center;">
+        <h1 style="margin: 0; color: #d3b573; font-size: 26px;">Residence 541 Spa</h1>
+        <p style="margin: 8px 0 0 0; color: #f7f3ec; font-size: 15px;">Your spa booking is almost complete</p>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 36px 30px;">
+        <h2 style="margin: 0 0 16px 0; color: #2b241c; font-size: 20px; text-transform: capitalize;">Hi ${booking.fullName},</h2>
+        <p style="margin: 0 0 24px 0; color: #55493a; font-size: 15px; line-height: 1.6;">
+          Thank you for booking with our spa. Please confirm your appointment below.
+        </p>
+        <table role="presentation" style="width: 100%; border-collapse: collapse; margin: 0 0 24px 0; border: 1px solid #e5dccb; border-radius: 8px;">
+          <tr>
+            <td style="padding: 10px 16px; color: #8a7a60; font-size: 14px; border-bottom: 1px solid #e5dccb;">Service</td>
+            <td style="padding: 10px 16px; color: #2b241c; font-size: 14px; font-weight: 600; text-align: right; border-bottom: 1px solid #e5dccb;">${booking.serviceName}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 16px; color: #8a7a60; font-size: 14px; border-bottom: 1px solid #e5dccb;">Appointment</td>
+            <td style="padding: 10px 16px; color: #2b241c; font-size: 14px; font-weight: 600; text-align: right; border-bottom: 1px solid #e5dccb;">${slot}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 16px; color: #8a7a60; font-size: 14px;">Booking ID</td>
+            <td style="padding: 10px 16px; color: #2b241c; font-size: 14px; font-weight: 600; text-align: right;">${booking.token}</td>
+          </tr>
+        </table>
+        <table role="presentation" style="width: 100%; border-collapse: collapse; margin: 0 0 24px 0;">
+          <tr>
+            <td style="text-align: center;">
+              <a href="${verificationLink}"
+                 style="display: inline-block; padding: 14px 40px; background-color: #b99855; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 15px;">
+                Confirm Appointment
+              </a>
+            </td>
+          </tr>
+        </table>
+        <p style="margin: 0; color: #8a7a60; font-size: 12px; text-align: center; word-break: break-all;">
+          Or copy and paste this link: ${verificationLink}
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 24px 30px; background-color: #2b241c; text-align: center;">
+        <p style="margin: 0; color: #cbbfa8; font-size: 12px; line-height: 1.6;">
+          This confirmation link expires in 24 hours.<br>
+          If you didn't make this booking, please ignore this email.
+        </p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `;
+}
+
+export async function sendSpaVerificationEmail(req, res) {
+  try {
+    if (!process.env.ACCESS_TOKEN_ZOHO_MAIL) {
+      process.env.ACCESS_TOKEN_ZOHO_MAIL = await refreshAccessToken()
+    }
+
+    const booking = req.locals.spaBooking
+    const subject = "Please confirm your spa appointment at Residence 541"
+    const body = generateSpaBookingEmailHTML(booking)
+
+    let tries = process.env.VERIF_MAIL_SEND_ATTEMPTS || 3;
+    while (tries > 0) {
+      let response = await fetch(maiiApi, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Zoho-oauthtoken ${process.env.ACCESS_TOKEN_ZOHO_MAIL}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          "fromAddress": fromAddress,
+          "toAddress": `${booking.email}`,
+          "subject": subject,
+          "content": body
+        })
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to send email`);
+      }
+      const jsonData = await response.json();
+      if (jsonData.data.errorCode) {
+        if (jsonData.data.errorCode === "INVALID_OAUTHTOKEN") {
+          console.log('Access token expired, refreshing token...');
+          process.env.ACCESS_TOKEN_ZOHO_MAIL = await refreshAccessToken();
+        }
+      } else {
+        res.status(200).json({ message: 'Spa verification email sent successfully' })
+        return;
+      }
+      tries -= 1;
+    }
+    res.status(400).json("Attempts exceeded")
+  } catch (error) {
+    console.error(error.message)
+    res.status(500).json({ error: 'Failed to send spa verification email' })
+  }
+}
+
+export const sendSpaManagerNotificationEmail = async (req, res, next) => {
+  const booking = req.locals.spaBooking
+  try {
+    if (!process.env.ACCESS_TOKEN_ZOHO_MAIL) {
+      process.env.ACCESS_TOKEN_ZOHO_MAIL = await refreshAccessToken()
+    }
+    const slot = formatSpaSlot(booking.startsAt, booking.durationMinutes)
+    let subject = "New Spa Booking Confirmed at Residence 541"
+    let body = `<h2>New Spa Booking Confirmed</h2>
+    <p>A spa appointment has been confirmed with the following details:</p>
+    <ul>
+      <li>Name: ${booking.firstName} ${booking.lastName}</li>
+      <li>Email: ${booking.email}</li>
+      <li>Phone: ${booking.phone}</li>
+      <li>Service: ${booking.serviceName}</li>
+      <li>Appointment: ${slot}</li>
+      <li>Price: ₦${Number(booking.price).toLocaleString('en-NG')}</li>
+      <li>Booking ID: ${booking.token}</li>
+    </ul>`
+    let managerEmail = process.env.MANAGER_EMAIL || TEST_EMAIL;
+    let tries = 3;
+    while (tries > 0) {
+      let response = await fetch(maiiApi, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Zoho-oauthtoken ${process.env.ACCESS_TOKEN_ZOHO_MAIL}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          "fromAddress": fromAddress,
+          "toAddress": managerEmail,
+          "subject": subject,
+          "content": body
+        })
+      });
+      if (!response.ok) {
+        next(new Error(`Failed to send email`));
+      }
+      const jsonData = await response.json();
+      if (jsonData.data.errorCode === "INVALID_OAUTHTOKEN") {
+        console.log('Access token expired, refreshing token...');
+        process.env.ACCESS_TOKEN_ZOHO_MAIL = await refreshAccessToken();
+      } else {
+        console.log('Spa manager notification email sent successfully');
+        break;
+      }
+      tries -= 1;
+    }
+    next()
+  } catch (error) {
+    console.error('Failed to send spa manager notification email:', error.message)
+    next(error)
+  }
 }

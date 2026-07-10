@@ -9,7 +9,7 @@ import { sendBuild, setBuild } from "./db/build.js"
 const INITIAL_RETRY_DELAY_MS = 5000
 const MAX_RETRY_DELAY_MS = 60000
 
-async function connectWithRetry(DB_URI, onFirstConnect) {
+async function connectWRetry(DB_URI, onFirstConnect) {
     let delay = INITIAL_RETRY_DELAY_MS
     for (;;) {
         try {
@@ -43,12 +43,13 @@ loadParameters().then(async () => {
     let { signUrl, buildSignedUrlsObj } = await import("./managerS3.js")
     let { testDbConnection } = await import("./testDb.js")
     let { verifyBooking, confirmBooking } = await import("./bookingVerification.js")
-    let { sendVerificationEmail, sendManagerNotificationEmail } = await import("./functions/email.js")
+    let { sendVerificationEmail, sendManagerNotificationEmail, sendSpaVerificationEmail, sendSpaManagerNotificationEmail } = await import("./functions/email.js")
     let { buildRoomsArray, buildRoomById } = await import("./db/rooms.js")
+    let { getSpaServices, getSpaAvailability, verifySpaBooking, confirmSpaBooking } = await import("./spa/spaBooking.js")
 
     startservice()
 
-    connectWithRetry(DB_URI, testDbConnection)
+    connectWRetry(DB_URI, testDbConnection)
 
     async function startservice() {
         //Import authentication modules here
@@ -92,6 +93,14 @@ loadParameters().then(async () => {
         app.get('/api/rez541/v1.1/getrooms', buildRoomsArray, sendBuild);
 
         app.get('/api/rez541/v1.1/getroombyid/id/:id', buildRoomById, sendBuild);
+
+        app.get('/api/rez541/v1.1/spa/services', getSpaServices, sendBuild)
+
+        app.get('/api/rez541/v1.1/spa/availability', getSpaAvailability, sendBuild)
+
+        app.post('/api/rez541/v1.1/spa/verifybooking', upload.none(), verifySpaBooking, sendSpaVerificationEmail)
+
+        app.post('/api/rez541/v1.1/spa/confirmbooking', confirmSpaBooking, sendSpaManagerNotificationEmail, sendBuild)
 
         app.use((err, req, res, next) => {
             console.error(err.stack);
