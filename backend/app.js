@@ -1,14 +1,40 @@
 import express from 'express';
-import { connect } from "mongoose"
+import mongoose from "mongoose"
+const { connect, connection } = mongoose
 import { createServer } from 'node:http'
 import multer from 'multer'
 import { loadParameters } from "./cloud.js"
 import { sendBuild, setBuild } from "./db/build.js"
 
+const INITIAL_RETRY_DELAY_MS = 5000
+const MAX_RETRY_DELAY_MS = 60000
+
+async function connectWithRetry(DB_URI, onFirstConnect) {
+    let delay = INITIAL_RETRY_DELAY_MS
+    for (;;) {
+        try {
+            await connect(DB_URI, { serverSelectionTimeoutMS: 5000 })
+            console.log("Connected to MongoDB")
+        } catch (error) {
+            console.error(`MongoDB connection failed: ${error.message}. Retrying in ${delay / 1000}s...`)
+            await new Promise(resolve => setTimeout(resolve, delay))
+            delay = Math.min(delay * 2, MAX_RETRY_DELAY_MS)
+            continue
+        }
+        if (onFirstConnect) {
+            try {
+                await onFirstConnect()
+            } catch (error) {
+                console.error("Connected to MongoDB, but the post-connect test query failed:", error.message)
+            }
+        }
+        return
+    }
+}
+
 loadParameters().then(async () => {
     let { DB_URI } = await import("./initDB.js")
     // console.log(DB_URI)
-    await connect(DB_URI)
     //Set public image expiration time
     if (!process.env.PUBLIC_IMG_EXP) {
         process.env.PUBLIC_IMG_EXP = 5
@@ -19,9 +45,10 @@ loadParameters().then(async () => {
     let { verifyBooking, confirmBooking } = await import("./bookingVerification.js")
     let { sendVerificationEmail, sendManagerNotificationEmail } = await import("./functions/email.js")
     let { buildRoomsArray, buildRoomById } = await import("./db/rooms.js")
-    await testDbConnection()
 
     startservice()
+
+    connectWithRetry(DB_URI, testDbConnection)
 
     async function startservice() {
         //Import authentication modules here
@@ -39,6 +66,13 @@ loadParameters().then(async () => {
 
         app.get('/api', (req, res) => {
             res.json({ "message": "/api endpoint", "status": "true" })
+        });
+
+        app.get('/api/health', (req, res) => {
+            const states = ['disconnected', 'connected', 'connecting', 'disconnecting']
+            const dbState = states[connection.readyState] || 'unknown'
+            const healthy = connection.readyState === 1
+            res.status(healthy ? 200 : 503).json({ status: healthy ? 'ok' : 'degraded', db: dbState })
         });
 
         app.get('/api/test', (req, res) => {
@@ -70,4 +104,7 @@ loadParameters().then(async () => {
             console.log(`API server is running on port ${PORT}`);
         });
     }
+}).catch((error) => {
+    console.error("Fatal error during startup:", error);
+    process.exit(1);
 })
