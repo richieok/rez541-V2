@@ -35,7 +35,7 @@ export const signUrl = async (req, res) => {
                 console.log("Existing signed URL has expired. Generating new signed URL.");
                 const surl = await fsignUrl({ client, bucket: process.env.AWS_BUCKET, key });
                 result[0].signedUrl = surl;
-                result[0].expiresAt = new Date(Date.now() + 3600 * 5000);
+                result[0].expiresAt = new Date(Date.now() + (3600000 * process.env.PUBLIC_IMG_EXP - 1000));
                 await result[0].save();
                 res.send(surl);
             }
@@ -46,7 +46,7 @@ export const signUrl = async (req, res) => {
                 imageUri: key,
                 imagePath: key,
                 signedUrl: surl,
-                expiresAt: new Date(Date.now() + 3600 * 5000), // 5 hours from now
+                expiresAt: new Date(Date.now() + (3600000 * process.env.PUBLIC_IMG_EXP - 1000)),
             });
             await surlObj.save();
             res.send({ surl });
