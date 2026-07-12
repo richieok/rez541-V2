@@ -75,7 +75,7 @@
                     {#each categories as category}
                         <optgroup label={category.label}>
                             {#each data.services.filter((s) => s.category === category.id) as service}
-                                <option value={service.id}>{service.name} — {fmt(service.price)}</option>
+                                <option value={service.id}>{service.name} · {service.duration} — {fmt(service.price)}</option>
                             {/each}
                         </optgroup>
                     {/each}

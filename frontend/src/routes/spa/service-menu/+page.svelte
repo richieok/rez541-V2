@@ -2,109 +2,20 @@
     import { onMount } from 'svelte';
 
     let { data } = $props();
-    let { signedUrls } = data;
+    let { signedUrls, menu } = data;
 
     const heroImg = signedUrls?.["public/spa/Gemini_Generated_Image_o7r9y0o7r9y0o7r9.png"];
     const lotusImg = signedUrls?.["public/spa/spa-lotus-plain.svg"];
 
-    const treatments = [
-        { name: 'Swedish', duration: '30 mins', price: 45000 },
-        { name: 'Swedish', duration: '60 mins', price: 60000 },
-        { name: 'Deep Tissue', duration: '1 hour', price: 60000 },
-        { name: 'Deep Tissue', duration: '90 mins', price: 90000 },
-        { name: 'Tension Relief', duration: '1 hour', price: 60000 },
-        { name: 'Tension Relief', duration: '90 mins', price: 90000 },
-        { name: 'African Shea Butter', duration: '60 mins', price: 70000 },
-        { name: 'Pregnancy Massage', duration: '45 mins', price: 60000 },
-        { name: 'Back, Neck & Shoulder', duration: '45 mins', price: 40000 },
-        { name: 'Indian Head Massage', duration: '30 mins', price: 30000 },
-        { name: 'Four Hands Massage', duration: '60 mins', price: 100000 },
-        { name: 'Hot Stone Massage', duration: '90 mins', price: 80000 },
-        { name: 'Calf and Foot Massage', duration: '30 mins', price: 30000 },
-    ];
-
-    const facials = [
-        { name: 'Korean Express Facial (Dry to Combination skin)', duration: '45 mins', price: 40000 },
-        { name: 'Deep Cleanse Facial (Anti Acne)', duration: '60 mins', price: 50000 },
-        { name: 'Hydrating Hyaluronic Facial (Dry skin)', duration: '1 hr 15 mins', price: 70000 },
-        { name: 'Extra Glow Brightening Facial (All skin types)', duration: '1 hr 30 mins', price: 80000 },
-        { name: 'Anti Aging Collagen & Retinol Facial (all skin types)', duration: '1 hr 30 mins', price: 100000 },
-    ];
-
-    const waxing = [
-        { name: 'Full Leg', price: 45000 },
-        { name: 'Half Leg', price: 30000 },
-        { name: 'Full Arm', price: 35000 },
-        { name: 'Half Arm', price: 27000 },
-        { name: 'Hands', price: 12000 },
-        { name: 'Underarm', price: 15000 },
-        { name: 'Upper Lip', price: 10000 },
-        { name: 'Facial Wax', price: 18000 },
-        { name: 'Full Chin', price: 15000 },
-        { name: 'Tummy', price: 18000 },
-        { name: 'Gluteus', price: 15000 },
-        { name: 'Bikini Line', price: 20000 },
-        { name: 'Brazilian', price: 25000 },
-        { name: 'Hollywood (Full Bikini)', price: 30000 },
-        { name: 'Eyebrow Tweezing', price: 10000 },
-        { name: 'Eyebrow Wax', price: 12000 },
-        { name: 'Full Back & Shoulders', price: 36000 },
-        { name: 'Partial Back', price: 16000 },
-    ];
-
-    const nailCare = [
-        { name: '541 Classic Manicure', price: 15000 },
-        { name: 'Classic Manicure with Gel Polish', price: 20000 },
-        { name: 'Gel Polish On', price: 10000 },
-        { name: 'Removal of Gel Polish', price: 8000 },
-        { name: '541 Classic Pedicure', price: 20000 },
-        { name: '541 Classic Pedicure with Gel Polish', price: 25000 },
-        { name: 'Express Pedicure', price: 10000 },
-        { name: 'Express Pedicure with Gel', price: 20000 },
-        { name: '541 Pedicure with Happy Feet Mask', price: 25000 },
-        { name: 'Medical Grade Pedicure (Corn Removal)', price: 50000 },
-        { name: '541 Pedicure with Coconut or Argan Oil Wrap', price: 30000 },
-    ];
-
-    const packages = [
-        {
-            name: 'Thermal Recovery Experience',
-            duration: '180 mins',
-            description: 'Enjoying a hot Sauna or Steam session, a skin hydrating Shower, exfoliation and finish with a full body massage (Swedish or Deep Tissue).',
-            price: { single: 150000 },
-        },
-        {
-            name: 'Pure Calm Deep Detox',
-            duration: '210 mins',
-            description: 'Treat your body to a first Sauna session, full body exfoliation, a rich mask and body wrap, followed by a second sauna session, cleansing shower and a relaxing massage.',
-            price: { single: 200000 },
-        },
-        {
-            name: '541 Signature Retreat Premium Package',
-            description: 'Spend the night in our complimentary bedroom, pampered by our concierge. Enjoy the thermal recovery experience or traditional Moroccan Hammam, an express facial, pedicure.',
-            price: { single: 250000, couple: 450000 },
-            featured: true,
-        },
-        {
-            name: '541 Signature Retreat Luxury Escape Package',
-            description: 'Spend the night in our complimentary double bedroom, pampered by our concierge. Enjoy the thermal recovery experience or Moroccan Hammam of your choice, full body massage, facial of your choice, classic manicure and pedicure. End the day with an aromatherapy salt and candle bath and detoxifying or calming tea.',
-            price: { single: 400000, couple: 600000 },
-            featured: true,
-        },
-    ];
-
-    const hammam = [
-        { name: 'Traditional Hammam', price: 60000 },
-        { name: 'Extra Brightening', price: 80000 },
-        { name: 'Soukla Hammam', price: 90000 },
-        { name: 'Hammam Body Wrap (add-on: argan or coconut oil & body serum polish)', price: 25000 },
-    ];
-
-    const wellness = [
-        { name: 'Yoga', description: 'Enjoy the calmness of our Yoga in our group classes.' },
-        { name: 'Nutrition Counselling', description: 'Review your diet and eating habits and learn the connections between eating right, great skin, good health and maintaining an optimal weight and self-confidence. Available for individuals and groups.' },
-        { name: 'Vitamin Infusion Therapy', description: 'Detoxify and increase your energy levels with our vitamin infusion mix to detoxify and increase energy levels (Vitamin C, Gluthathione, Vitamin B Complex, Alpha Lipoic Acid and Collagen).' },
-    ];
+    // Menu content comes from GET /api/rez541/v1.1/spa/menu (single source
+    // of truth in backend/spa/services.js), fetched in +page.server.js.
+    const treatments = menu?.treatments ?? [];
+    const facials = menu?.facials ?? [];
+    const waxing = menu?.waxing ?? [];
+    const nailCare = menu?.nailCare ?? [];
+    const packages = menu?.packages ?? [];
+    const hammam = menu?.hammam ?? [];
+    const wellness = menu?.wellness ?? [];
 
     function fmt(n) {
         return '₦' + n.toLocaleString();
@@ -184,6 +95,9 @@
     <p class="vat-notice">All prices are exclusive of 7.5% VAT</p>
 
     <!-- Service sections -->
+    {#if !menu}
+        <p class="menu-error">Our service menu is temporarily unavailable. Please try again shortly.</p>
+    {:else}
     <div class="menu">
 
         <!-- Treatments -->
@@ -356,6 +270,7 @@
         </section>
 
     </div>
+    {/if}
 </div>
 
 <style>
@@ -523,6 +438,14 @@
         background: hsl(42, 40%, 92%);
         border-bottom: 1px solid var(--rule);
         padding: 0.55rem 1rem;
+        margin: 0;
+    }
+
+    .menu-error {
+        text-align: center;
+        font-family: "Montserrat", sans-serif;
+        color: var(--ink-soft);
+        padding: var(--section-gap) 1.5rem;
         margin: 0;
     }
 

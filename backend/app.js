@@ -45,7 +45,7 @@ loadParameters().then(async () => {
     let { verifyBooking, confirmBooking } = await import("./bookingVerification.js")
     let { sendVerificationEmail, sendManagerNotificationEmail, sendSpaVerificationEmail, sendSpaManagerNotificationEmail } = await import("./functions/email.js")
     let { buildRoomsArray, buildRoomById } = await import("./db/rooms.js")
-    let { getSpaServices, getSpaAvailability, verifySpaBooking, confirmSpaBooking } = await import("./spa/spaBooking.js")
+    let { getSpaServices, getSpaMenu, getSpaAvailability, verifySpaBooking, confirmSpaBooking } = await import("./spa/spaBooking.js")
 
     startservice()
 
@@ -95,6 +95,8 @@ loadParameters().then(async () => {
         app.get('/api/rez541/v1.1/getroombyid/id/:id', buildRoomById, sendBuild);
 
         app.get('/api/rez541/v1.1/spa/services', getSpaServices, sendBuild)
+
+        app.get('/api/rez541/v1.1/spa/menu', getSpaMenu, sendBuild)
 
         app.get('/api/rez541/v1.1/spa/availability', getSpaAvailability, sendBuild)
 
