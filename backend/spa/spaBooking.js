@@ -1,5 +1,5 @@
 import { SpaBooking } from "../models/spabooking.js"
-import { spaServices, findServiceById, SPA_OPEN_HOUR, SPA_CLOSE_HOUR, SLOT_INTERVAL_MINUTES } from "./services.js"
+import { spaMenu, spaServices, findServiceById, SPA_OPEN_HOUR, SPA_CLOSE_HOUR, SLOT_INTERVAL_MINUTES } from "./services.js"
 
 // Slot times are treated as UTC throughout so behaviour doesn't depend on
 // the server's timezone. Labels like "09:00" are spa wall-clock times.
@@ -36,6 +36,11 @@ function countOverlapping(bookings, slotStartMs, slotEndMs) {
 
 export const getSpaServices = (req, res, next) => {
     req.build.spaServices = spaServices
+    next()
+}
+
+export const getSpaMenu = (req, res, next) => {
+    req.build.spaMenu = spaMenu
     next()
 }
 
