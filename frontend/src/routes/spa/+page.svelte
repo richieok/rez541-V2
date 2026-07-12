@@ -88,6 +88,7 @@
                 <!-- <h1>Spa &amp; <em>Wellness</em></h1> -->
                 <h1>The Spa <em>@ 541</em></h1>
                 <p class="tagline">A sanctuary of rest, ritual & renewal.</p>
+                <a class="book-cta" href="/spa/booking">Book Now</a>
             </div>
         </section>
     {:else}
@@ -297,6 +298,25 @@
         color: hsl(40, 20%, 75%);
         letter-spacing: 0.05em;
         margin: 0;
+    }
+
+    .book-cta {
+        display: inline-block;
+        margin-top: 1.75rem;
+        padding: 0.8rem 2.5rem;
+        border: 1px solid var(--gold);
+        border-radius: 2px;
+        color: var(--gold-light);
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        font-size: 0.8rem;
+        transition: background 150ms ease, color 150ms ease;
+    }
+
+    .book-cta:hover {
+        background: var(--gold);
+        color: var(--ink);
     }
 
     /* ── Services ─────────────────────────────────────── */
