@@ -1,0 +1,71 @@
+# Local testing of the PRODUCTION builds (traefik + adapter-node frontend +
+# backend), without touching AWS SSM or Let's Encrypt.
+#
+#   docker compose -f compose.local.yml up --build
+#
+# Differences from compose.prod.yml, on purpose:
+#   - No ACME/Let's Encrypt: plain HTTP on port 80 (avoids burning LE rate
+#     limits for residence541.com from a machine the domain doesn't point to)
+#   - Backend loads secrets from ./backend/.env (like dev) instead of
+#     CLOUD=aws + SSM, since there's no instance role locally
+#   - Routes use Host(`localhost`): frontend at http://localhost/,
+#     API at http://localhost/api/, traefik dashboard at http://localhost:8080
+#   - DOMAIN is unset, so emailed verification links point at the dev
+#     frontend (localhost:5173), not this stack
+name: rez541-local
+
+services:
+  traefik:
+    image: traefik:v3.6.1
+    environment:
+      - DOCKER_API_VERSION=1.44
+    container_name: traefik_local
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --api.dashboard=true
+      - --api.insecure=true
+    ports:
+      - 80:80
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - cosmosnet
+
+  backend:
+    build: ./backend
+    container_name: backend_local
+    working_dir: /app
+    command: npm run start
+    environment:
+      - PORT=4000
+      - NODE_ENV=development
+      - TEST=RED_LIGHT
+      - AWS_BUCKET=rez541bucket
+      - REGION=us-east-1
+    env_file:
+      - ./backend/.env
+    networks:
+      - cosmosnet
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.backend.rule=Host(`localhost`) && PathPrefix(`/api/`)
+      - traefik.http.routers.backend.entrypoints=web
+      - traefik.http.services.backend.loadbalancer.server.port=4000
+
+  frontend:
+    build: ./frontend
+    container_name: frontend_local
+    networks:
+      - cosmosnet
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.frontend.rule=Host(`localhost`)
+      - traefik.http.routers.frontend.entrypoints=web
+      - traefik.http.services.frontend.loadbalancer.server.port=3000
+
+networks:
+  cosmosnet:
+    driver: bridge
