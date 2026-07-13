@@ -1,0 +1,35 @@
+# Overlay for compose.yml that swaps MongoDB Atlas for a throwaway local
+# MongoDB, so the booking system can be tested with made-up data.
+#
+# Start the dev stack with the fake database:
+#   ./dev-fakedb.sh
+#   (or: docker compose -f compose.yml -f compose.fakedb.yml up --build --watch)
+#
+# Seed it with fake spa bookings:
+#   docker compose -f compose.yml -f compose.fakedb.yml exec backend npm run seed:spa
+#
+# Data persists in the mongo-fake-data volume between runs. To start clean:
+#   docker compose -f compose.yml -f compose.fakedb.yml down -v
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: mongo_fake
+    ports:
+      # Exposed on the host so you can inspect data with mongosh / Compass:
+      #   mongodb://localhost:27017/rez541db
+      - 27017:27017
+    volumes:
+      - mongo-fake-data:/data/db
+    networks:
+      - cosmosnet
+
+  backend:
+    environment:
+      # Overrides the Atlas connection string built in backend/initDB.js
+      - DB_URI=mongodb://mongo:27017/rez541db
+    depends_on:
+      - mongo
+
+volumes:
+  mongo-fake-data:
