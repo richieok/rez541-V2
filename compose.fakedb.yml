@@ -5,8 +5,9 @@
 #   ./dev-fakedb.sh
 #   (or: docker compose -f compose.yml -f compose.fakedb.yml up --build --watch)
 #
-# Seed it with fake spa bookings:
+# Seed it with fake spa bookings and the room catalogue:
 #   docker compose -f compose.yml -f compose.fakedb.yml exec backend npm run seed:spa
+#   docker compose -f compose.yml -f compose.fakedb.yml exec backend npm run seed:rooms
 #
 # Data persists in the mongo-fake-data volume between runs. To start clean:
 #   docker compose -f compose.yml -f compose.fakedb.yml down -v
@@ -21,6 +22,21 @@ services:
       - 27017:27017
     volumes:
       - mongo-fake-data:/data/db
+    networks:
+      - cosmosnet
+
+  # Web UI for browsing the fake database: http://localhost:8081
+  mongo-express:
+    image: mongo-express:1.0.2
+    container_name: mongo_express_fake
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_URL=mongodb://mongo:27017/
+      # Local throwaway data only, so no login screen.
+      - ME_CONFIG_BASICAUTH=false
+    depends_on:
+      - mongo
     networks:
       - cosmosnet
 
