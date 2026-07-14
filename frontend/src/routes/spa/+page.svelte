@@ -1,5 +1,7 @@
 <script>
+    import SignedImage from "$lib/components/SignedImage.svelte";
     import { onMount } from "svelte";
+    import { browser } from "$app/environment";
     import { preloadImages } from "$lib/utils/images.js";
     import { cacheSignedUrls } from "$lib/utils/signedUrlCache.js";
 
@@ -9,10 +11,18 @@
     let imagesReady = $state(false);
     const heroSrc = signedUrls?.["public/spa/scrub-room.jpg"];
     const lotusSrc = signedUrls?.["public/spa/spa-lotus-plain.svg"];
-    const livingRoomSrc = signedUrls?.["public/spa/living-room.jpg"];
-    const scrubShotSrc = signedUrls?.["public/spa/scrub-room-shot.jpg"];
-    const scrubRoom2Src = signedUrls?.["public/spa/scrub-room2.jpg"];
-    const galleryImages = [livingRoomSrc, scrubShotSrc, scrubRoom2Src];
+    const galleryKeys = [
+        "public/spa/living-room.jpg",
+        "public/spa/scrub-room-shot.jpg",
+        "public/spa/scrub-room2.jpg",
+    ];
+
+    // The hero URLs are already signed server-side; cache them during init
+    // so other pages (and <SignedImage>s) can reuse them instead of
+    // re-signing.
+    if (browser) {
+        cacheSignedUrls(signedUrls);
+    }
 
     // Mirrors the categories on /spa/service-menu - keep the copy in sync
     // with that page's section-sub taglines if they change.
@@ -69,10 +79,7 @@
     ];
 
     onMount(async () => {
-        // These URLs are already signed server-side; cache them so other
-        // pages can reuse them instead of re-signing.
-        cacheSignedUrls(signedUrls);
-        await preloadImages([heroSrc, lotusSrc, ...galleryImages]);
+        await preloadImages([heroSrc, lotusSrc]);
         imagesReady = true;
     });
 </script>
@@ -96,13 +103,9 @@
     {/if}
 
     <div class="gallery">
-        {#each galleryImages as src}
+        {#each galleryKeys as key}
             <div class="gallery-item">
-                {#if imagesReady}
-                    <img {src} alt="" class="fade-in" />
-                {:else}
-                    <div class="skeleton-block"></div>
-                {/if}
+                <SignedImage src={key} alt="" class="fade-in" />
             </div>
         {/each}
     </div>
@@ -202,10 +205,6 @@
     /* ── Loading skeletons ────────────────────────────── */
     .hero-skeleton {
         min-height: clamp(420px, 60vh, 680px);
-    }
-
-    .hero-skeleton,
-    .skeleton-block {
         background: linear-gradient(
             90deg,
             hsl(40, 20%, 92%) 25%,
@@ -214,11 +213,6 @@
         );
         background-size: 200% 100%;
         animation: shimmer 1.4s ease-in-out infinite;
-    }
-
-    .skeleton-block {
-        width: 100%;
-        height: 100%;
     }
 
     @keyframes shimmer {
@@ -246,7 +240,8 @@
         overflow: hidden;
     }
 
-    .gallery-item img {
+    /* :global() so the rules reach the <img> rendered inside SignedImage. */
+    .gallery-item :global(img) {
         width: 100%;
         height: 100%;
         object-fit: cover;

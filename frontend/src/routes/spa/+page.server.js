@@ -1,12 +1,11 @@
 import { retrieveSignedUrls } from '$lib/server/signing.js';
 
+// Only the above-the-fold hero images are signed server-side so they can
+// start downloading with the first paint; the gallery resolves client-side
+// via <SignedImage>.
 let urls = [
-    "public/spa/Gemini_Generated_Image_o7r9y0o7r9y0o7r9.png",
-    "public/spa/spa-lotus-plain.svg",
-    "public/spa/scrub-room-shot.jpg",
-    "public/spa/living-room.jpg",
-    "public/spa/scrub-room2.jpg",
-    "public/spa/scrub-room.jpg"
+    "public/spa/scrub-room.jpg",
+    "public/spa/spa-lotus-plain.svg"
 ]
 export async function load() {
     const res = await retrieveSignedUrls(urls);
@@ -15,7 +14,6 @@ export async function load() {
         return {};
     }
     const { signedUrls } = await res.json();
-    // console.log("signedUrls      ------>", signedUrls)
     return {
         signedUrls
     };
