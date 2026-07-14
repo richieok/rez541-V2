@@ -76,3 +76,59 @@ export function cacheSignedUrls(signedUrlObj = {}) {
 
     writeCache(cache);
 }
+
+// Signing requests already on the wire, keyed per uri, so concurrent callers
+// (e.g. several <SignedImage>s mounting at once) share one round trip
+// instead of each POSTing /app/signurls for the same key.
+const inFlight = new Map();
+
+async function fetchSignedUrls(uris) {
+    const res = await fetch("/app/signurls", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ uris }),
+    });
+    if (!res.ok) {
+        throw new Error(`Failed to fetch signed URLs: ${res.status}`);
+    }
+    return res.json();
+}
+
+// Resolves S3 object keys to signed URLs: still-valid cached ones come
+// straight from localStorage, the rest are signed via the API and cached for
+// next time. Returns `{ uri: signedUrl }`; a uri whose signing failed is
+// simply absent, so callers can decide how to degrade.
+export async function resolveSignedUrls(uris = []) {
+    const { cached, missing } = getCachedSignedUrls(uris);
+    if (missing.length === 0) {
+        return cached;
+    }
+
+    const toFetch = missing.filter((uri) => !inFlight.has(uri));
+    if (toFetch.length > 0) {
+        const request = fetchSignedUrls(toFetch)
+            .then((fetched) => {
+                cacheSignedUrls(fetched);
+                return fetched;
+            })
+            .finally(() => {
+                for (const uri of toFetch) inFlight.delete(uri);
+            });
+        for (const uri of toFetch) {
+            inFlight.set(uri, request.then((fetched) => fetched[uri]));
+        }
+    }
+
+    const resolved = { ...cached };
+    await Promise.all(
+        missing.map(async (uri) => {
+            try {
+                const url = await inFlight.get(uri);
+                if (url) resolved[uri] = url;
+            } catch {
+                // Signing failed - leave this uri out.
+            }
+        }),
+    );
+    return resolved;
+}
