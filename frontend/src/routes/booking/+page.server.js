@@ -1,4 +1,5 @@
 import { getRooms } from "$lib/server/bookingApp.js"
+import logger from "$lib/server/logger.js"
 
 function formatDateWithTime(dateString, hour) {
     if (!dateString) return "";
@@ -8,9 +9,7 @@ function formatDateWithTime(dateString, hour) {
 }
 
 export const actions = {
-    default: async ({ request }) => {
-        // console.log('Origin:', request.headers.get('origin'));
-        // console.log('Host:', request.headers.get('host'));
+    default: async ({ request, fetch }) => {
         let message = "Nothing done"
         try {
             const formData = await request.formData();
@@ -33,9 +32,10 @@ export const actions = {
             if (!res.ok) {
                 throw new Error(data.message || 'Failed to start booking.');
             }
-            console.log('Booking response:', data);
+            logger.info({ roomId }, 'Booking verification initiated');
             message = "Booking initiated successfully. Please check your email to verify your booking."
         } catch (error) {
+            logger.error({ err: error }, 'Booking action failed');
             return {
                 success: false, error: error.message
             }
@@ -47,6 +47,6 @@ export const actions = {
 export async function load({url}) {
     const roomId = url.searchParams.get('roomId');
     let rooms = await getRooms()
-    roomId ? console.log("Room ID:", roomId) : console.log("No Room ID provided");
+    logger.debug({ roomId: roomId || null }, 'Booking page loaded');
     return { "rooms": rooms, "roomId": roomId };
 }

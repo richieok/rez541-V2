@@ -17,7 +17,6 @@
 
         scrollTimeout = setTimeout(() => {
             // Set new timeout - fires when scrolling stops
-            console.log("scroll");
             // Find the card closest to the current scroll position
             let minDistance = Infinity;
             cards.forEach((card, index) => {
@@ -61,7 +60,6 @@
                     : Math.min(cards.length - 1, currentIndex + 1);
 
             currentIndex = newIndex;
-            // console.log(newIndex);
 
             // Scroll to the new card
             carousel.scrollTo({

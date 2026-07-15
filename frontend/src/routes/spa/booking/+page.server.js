@@ -1,4 +1,6 @@
-export async function load({ url }) {
+import logger from '$lib/server/logger.js';
+
+export async function load({ url, fetch }) {
     const serviceId = url.searchParams.get('serviceId');
     const date = url.searchParams.get('date');
 
@@ -9,7 +11,7 @@ export async function load({ url }) {
             ({ spaServices: services } = await res.json());
         }
     } catch (error) {
-        console.error('Failed to fetch spa services:', error.message);
+        logger.error({ err: error }, 'Failed to fetch spa services');
     }
 
     let availability = null;
@@ -20,7 +22,7 @@ export async function load({ url }) {
                 ({ availability } = await res.json());
             }
         } catch (error) {
-            console.error('Failed to fetch spa availability:', error.message);
+            logger.error({ err: error }, 'Failed to fetch spa availability');
         }
     }
 
@@ -28,7 +30,7 @@ export async function load({ url }) {
 }
 
 export const actions = {
-    default: async ({ request }) => {
+    default: async ({ request, fetch }) => {
         try {
             const formData = await request.formData();
             const bookingObj = {
@@ -55,6 +57,7 @@ export const actions = {
                 message: 'Appointment requested. Please check your email to confirm your booking.'
             };
         } catch (error) {
+            logger.error({ err: error }, 'Spa booking action failed');
             return { success: false, error: error.message };
         }
     }

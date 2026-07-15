@@ -13,19 +13,15 @@ export const verifyBooking = async (req, res, next) => {
   if (!bookingObj) {
     return res.status(400).json({ message: 'No booking data provided' })
   }
-  console.log("verifyBooking( )");
-  console.log(bookingObj);
+  req.log.info({ roomId: bookingObj.roomId, checkIn: bookingObj.checkIn, checkOut: bookingObj.checkOut }, 'Verifying booking')
   try {
     const token = generateUrlSafeToken()
     const roomType = await RoomType.findOne({ id: bookingObj.roomId })
-    console.log("Token:", token)
     bookingObj.token = token
     bookingObj.roomType = roomType._id
     const booking = new Booking(bookingObj)
     await booking.save()
-    // bookingObj.roomType = roomType.toObject()
-    // bookingObj.name = `${bookingObj.firstName} ${bookingObj.lastName}`
-    // console.log("Booking saved");
+    req.log.info({ roomId: bookingObj.roomId }, 'Booking saved, pending verification')
 
     req.locals.booking = Object.defineProperties(bookingObj, {
       roomTypeObj: {
@@ -38,21 +34,19 @@ export const verifyBooking = async (req, res, next) => {
       }
     })
 
-    // req.token = token
-    // req.email = bookingObj.email
-    // Call verification email middleware
     next()
   } catch (error) {
-    // console.error('Error verifying booking\n', error.message);
+    req.log.error({ err: error }, 'Error verifying booking');
     res.status(500).json({ message: 'Internal server error' })
   }
 }
 
 export const confirmBooking = async (req, res, next) => {
   let { bookingToken } = req.body
-  console.log(bookingToken);
+  req.log.info('Confirming booking');
   const booking = await Booking.findOne({ token: bookingToken }).populate('roomType')
   if (!booking) {
+    req.log.warn('Booking confirmation failed: token not found')
     return res.status(404).json({ message: 'Booking not found' })
   }
   if (booking.isVerified) {

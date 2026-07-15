@@ -6,8 +6,6 @@
     let navList;
     let navContainer;
 
-    // console.log($state.snapshot(page.url.pathname))
-
     if (browser) {
         document.addEventListener("scroll", (event) => {
             if (menuToggle?.checked) {

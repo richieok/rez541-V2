@@ -7,7 +7,7 @@ export const buildRoomsArray = async (req, res, next)=>{
         req.build.roomsArray = roomTypes;
         next();
     } catch (error) {
-        console.error("Error building room list:", error.message);
+        req.log.error({ err: error }, "Error building room list");
         next(error);
     }
 }
@@ -25,7 +25,7 @@ export const buildRoomById = async (req, res, next) => {
         req.build.room = room;
         next();
     } catch (error) {
-        console.error("Error building room type:", error.message);
+        req.log.error({ err: error, roomId: id }, "Error building room type");
         next(error);
     }
 }

@@ -150,7 +150,7 @@ export const verifySpaBooking = async (req, res, next) => {
         req.locals.spaBooking = booking.toObject()
         next()
     } catch (error) {
-        console.error('Error creating spa booking\n', error.message)
+        req.log.error({ err: error }, 'Error creating spa booking')
         res.status(500).json({ message: 'Internal server error' })
     }
 }
