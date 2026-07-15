@@ -1,17 +1,23 @@
 <script>
     import FixedBar from "$lib/components/FixedBar.svelte";
     import ActionButton from "$lib/components/ActionButton.svelte";
+    import SignedImage from "$lib/components/SignedImage.svelte";
     import { onMount } from "svelte";
+    import { browser } from "$app/environment";
     import { preloadImages } from "$lib/utils/images.js";
     import { cacheSignedUrls } from "$lib/utils/signedUrlCache.js";
     let { data } = $props();
     let room = data.room;
     let imagesReady = $state(false);
 
-    onMount(async () => {
-        // These URLs are already signed server-side; cache them too so the
-        // /rooms listing can reuse them instead of re-signing.
+    // These URLs are already signed server-side; cache them during init,
+    // before the gallery's <SignedImage>s mount, so they render straight
+    // from cache (and the /rooms listing can reuse them too).
+    if (browser) {
         cacheSignedUrls(room?.signedUrls);
+    }
+
+    onMount(async () => {
         const srcs = (room?.imageList ?? []).map((uri) => room.signedUrls[uri]);
         await preloadImages(srcs);
         imagesReady = true;
@@ -33,7 +39,7 @@
             {#if room?.imageList.length > 0}
                 {#each room.imageList as uri}
                     <div class="gallery-item">
-                        <img src={room.signedUrls[uri]} alt={room.name} />
+                        <SignedImage src={uri} alt={room.name} />
                     </div>
                 {/each}
             {/if}
@@ -116,7 +122,8 @@
         margin: 0 auto;
     }
 
-    .gallery-item img {
+    /* :global() so the rules reach the <img> rendered inside SignedImage. */
+    .gallery-item :global(img) {
         width: 100%;
         aspect-ratio: 4 / 3;
         object-fit: cover;
@@ -125,7 +132,7 @@
         transition: transform 0.3s ease;
     }
 
-    .gallery-item:hover img {
+    .gallery-item:hover :global(img) {
         transform: scale(1.02);
     }
 

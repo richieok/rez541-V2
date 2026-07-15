@@ -3,42 +3,15 @@
     import RoomCards from "$lib/components/RoomCards.svelte";
     import { onMount } from "svelte";
     import { preloadImages } from "$lib/utils/images.js";
-    import {
-        getCachedSignedUrls,
-        cacheSignedUrls,
-    } from "$lib/utils/signedUrlCache.js";
+    import { resolveSignedUrls } from "$lib/utils/signedUrlCache.js";
 
     const { data } = $props();
     let rooms = $state(data.rooms);
     let imagesReady = $state(false);
 
-    async function signImages(imgArray = []) {
-        const { cached, missing } = getCachedSignedUrls(imgArray);
-        if (missing.length === 0) {
-            return cached;
-        }
-
-        let res = await fetch("/app/signurls", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                uris: missing,
-            }),
-        });
-        if (!res.ok) {
-            console.error("Failed to fetch signed URLs:", res.statusText);
-            return cached;
-        }
-        let fetched = await res.json();
-        cacheSignedUrls(fetched);
-        return { ...cached, ...fetched };
-    }
-
     async function procRooms(rooms) {
         for (let room of rooms) {
-            room.signedUrlObj = await signImages(room.imageList);
+            room.signedUrlObj = await resolveSignedUrls(room.imageList);
         }
     }
 

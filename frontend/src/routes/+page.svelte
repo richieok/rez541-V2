@@ -3,7 +3,9 @@
     import FeatAmenities from "./FeatAmenities.svelte";
     import LocationInfo from "$lib/components/LocationInfo.svelte";
     import KeyTag from "$lib/components/KeyTag.svelte";
+    import SignedImage from "$lib/components/SignedImage.svelte";
     import { onMount } from "svelte";
+    import { browser } from "$app/environment";
     import { preloadImages } from "$lib/utils/images.js";
     import { cacheSignedUrls } from "$lib/utils/signedUrlCache.js";
 
@@ -12,14 +14,15 @@
 
     let imagesReady = $state(false);
     const heroSrc = signedUrls?.["public/spa/reception3.jpg"];
-    const livingRoomSrc = signedUrls?.["public/3-bed-suite/living-room-3-bed.jpg"];
-    const exteriorSrc = signedUrls?.["public/exterior/block1-view-800w.jpg"];
+
+    // The hero URL is already signed server-side; cache it during init so
+    // other pages (and <SignedImage>s) can reuse it instead of re-signing.
+    if (browser) {
+        cacheSignedUrls(signedUrls);
+    }
 
     onMount(async () => {
-        // These URLs are already signed server-side; cache them so other
-        // pages (e.g. /rooms) can reuse them instead of re-signing.
-        cacheSignedUrls(signedUrls);
-        await preloadImages([heroSrc, livingRoomSrc, exteriorSrc]);
+        await preloadImages([heroSrc]);
         imagesReady = true;
     });
 </script>
@@ -47,26 +50,18 @@
         </div>
         <div class="about-collage">
             <figure class="collage-a">
-                {#if imagesReady}
-                    <img
-                        src={livingRoomSrc}
-                        alt="Living room in a three-bedroom suite"
-                        class="fade-in"
-                    />
-                {:else}
-                    <div class="skeleton-block"></div>
-                {/if}
+                <SignedImage
+                    src="public/3-bed-suite/living-room-3-bed.jpg"
+                    alt="Living room in a three-bedroom suite"
+                    class="fade-in"
+                />
             </figure>
             <figure class="collage-b">
-                {#if imagesReady}
-                    <img
-                        src={exteriorSrc}
-                        alt="Exterior view of Residence 541, Block One"
-                        class="fade-in"
-                    />
-                {:else}
-                    <div class="skeleton-block"></div>
-                {/if}
+                <SignedImage
+                    src="public/exterior/block1-view-800w.jpg"
+                    alt="Exterior view of Residence 541, Block One"
+                    class="fade-in"
+                />
             </figure>
         </div>
     </section>
@@ -98,10 +93,6 @@
         height: clamp(500px, calc(100vh - var(--header-height)), 800px);
         margin: 0 auto;
         box-sizing: border-box;
-    }
-
-    .hero-skeleton,
-    .skeleton-block {
         background: linear-gradient(
             90deg,
             hsl(40, 20%, 92%) 25%,
@@ -110,11 +101,6 @@
         );
         background-size: 200% 100%;
         animation: shimmer 1.4s ease-in-out infinite;
-    }
-
-    .skeleton-block {
-        width: 100%;
-        height: 100%;
     }
 
     @keyframes shimmer {
@@ -193,8 +179,8 @@
         z-index: 1;
     }
 
-    .about-collage img,
-    .about-collage .skeleton-block {
+    /* :global() so the rules reach the <img> rendered inside SignedImage. */
+    .about-collage :global(img) {
         width: 100%;
         height: 100%;
         object-fit: cover;
