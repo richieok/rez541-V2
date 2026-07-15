@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
+import logger from '$lib/server/logger.js';
 
 export const retrieveSignedUrls = async (urls) => {
-    // console.log("retrieveSignedUrls urls ➡️", urls)
     let res = await fetch('http://backend:4000/api/rez541/v1.1/signurls', {
         method: 'POST',
         headers: {
@@ -11,12 +11,9 @@ export const retrieveSignedUrls = async (urls) => {
     });
     if (res.ok) {
         let data = await res.json();
-        const { signedUrls } = data
-        // console.log("retrieveSignedUrls data ➡️", signedUrls)
         return json(data);
     } else {
-        // console.error(res.status)
-        // console.error('Failed to retrieve signed URLs:', res.statusText);
+        logger.error({ status: res.status, statusText: res.statusText, uriCount: urls.length }, 'Failed to retrieve signed URLs from backend');
         return {"error": true};
     }
 }

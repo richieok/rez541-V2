@@ -1,4 +1,5 @@
 import { retrieveSignedUrls } from '$lib/server/signing.js';
+import logger from '$lib/server/logger.js';
 
 // Only the hero is signed server-side so it can start downloading with the
 // first paint; the collage images resolve client-side via <SignedImage>.
@@ -32,7 +33,7 @@ const amenitiesDataArray = [
 export const load = async () => {
     const res = await retrieveSignedUrls(urls);
     if (res.error) {
-        console.error('Failed to retrieve signed URLs:', res.statusText);
+        logger.error({ statusText: res.statusText }, 'Failed to retrieve signed URLs');
         return {};
     }
     const { signedUrls } = await res.json();

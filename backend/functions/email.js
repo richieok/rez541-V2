@@ -1,3 +1,5 @@
+import logger from "../logger.js"
+
 const ACCOUNT_ID = process.env.ZOHO_MAIL_ACCOUNT_ID;
 
 let maiiApi = `https://mail.zoho.com/api/accounts/${ACCOUNT_ID}/messages`
@@ -6,7 +8,6 @@ const domain = process.env.DOMAIN || "localhost:5173"
 const proto = process.env.DOMAIN ? "https" : "http"
 let confirmUrl = `${proto}://${domain}/booking-conf?token=`
 let spaConfirmUrl = `${proto}://${domain}/spa/booking-conf?token=`
-// console.log(`confirmUrl: ${confirmUrl}`)
 
 const TEST_EMAIL = "richie.okoro@gmail.com";
 
@@ -23,7 +24,7 @@ async function refreshAccessToken() {
     const jsonData = await response.json();
     return jsonData.access_token;
   } catch (error) {
-    console.error('Error refreshing access token:', error);
+    logger.error({ err: error }, 'Error refreshing Zoho access token');
   }
 }
 
@@ -32,11 +33,9 @@ export async function sendVerificationEmail(req, res) {
     if (!process.env.ACCESS_TOKEN_ZOHO_MAIL) {
       process.env.ACCESS_TOKEN_ZOHO_MAIL = await refreshAccessToken()
     }
-    // console.log(`process.env.ACCESS_TOKEN_ZOHO_MAIL: ${process.env.ACCESS_TOKEN_ZOHO_MAIL}`);
-
     let booking = req.locals.booking
     booking.verificationLink = `${confirmUrl}${booking.token}`
-    console.log(booking);
+    req.log.info({ roomId: booking.roomId }, 'Sending booking verification email');
 
     let subject = "Please verify your booking at Residence 541"
     //     let body = `<h2>Thank you for choosing Residence 541!</h2>
@@ -67,19 +66,20 @@ export async function sendVerificationEmail(req, res) {
       const jsonData = await response.json();
       if (jsonData.data.errorCode) {
         if (jsonData.data.errorCode === "INVALID_OAUTHTOKEN") {
-          console.log('Access token expired, refreshing token...');
+          req.log.info('Access token expired, refreshing token...');
           process.env.ACCESS_TOKEN_ZOHO_MAIL = await refreshAccessToken();
         }
       } else {
-        // console.log('Email sent successfully:', jsonData);
+        req.log.info('Verification email sent successfully');
         res.status(200).json({ message: 'Verification email sent successfully' })
         return;
       }
       tries -= 1;
     }
+    req.log.warn('Verification email send attempts exceeded')
     res.status(400).json("Attempts exceeded")
   } catch (error) {
-    console.error(error.message)
+    req.log.error({ err: error }, 'Failed to send verification email')
     res.status(500).json({ error: 'Failed to send verification email' })
   }
 
@@ -122,24 +122,23 @@ export const sendManagerNotificationEmail = async (req, res, next) => {
       }
       const jsonData = await response.json();
       if (jsonData.data.errorCode === "INVALID_OAUTHTOKEN") {
-        console.log('Access token expired, refreshing token...');
+        req.log.info('Access token expired, refreshing token...');
         process.env.ACCESS_TOKEN_ZOHO_MAIL = await refreshAccessToken();
       } else {
-        console.log('Manager notification email sent successfully:', jsonData);
+        req.log.info('Manager notification email sent successfully');
         break;
       }
       tries -= 1;
     }
     next()
   } catch (error) {
-    console.error('Failed to send manager notification email:', error.message)
+    req.log.error({ err: error }, 'Failed to send manager notification email')
     next(error)
   }
 }
 
 function generateBookingEmailHTML(data) {
   const { name, token, checkIn, checkOut, roomTypeObj = {}, verificationLink } = data;
-  console.log(token)
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -403,18 +402,20 @@ export async function sendSpaVerificationEmail(req, res) {
       const jsonData = await response.json();
       if (jsonData.data.errorCode) {
         if (jsonData.data.errorCode === "INVALID_OAUTHTOKEN") {
-          console.log('Access token expired, refreshing token...');
+          req.log.info('Access token expired, refreshing token...');
           process.env.ACCESS_TOKEN_ZOHO_MAIL = await refreshAccessToken();
         }
       } else {
+        req.log.info('Spa verification email sent successfully');
         res.status(200).json({ message: 'Spa verification email sent successfully' })
         return;
       }
       tries -= 1;
     }
+    req.log.warn('Spa verification email send attempts exceeded')
     res.status(400).json("Attempts exceeded")
   } catch (error) {
-    console.error(error.message)
+    req.log.error({ err: error }, 'Failed to send spa verification email')
     res.status(500).json({ error: 'Failed to send spa verification email' })
   }
 }
@@ -459,17 +460,17 @@ export const sendSpaManagerNotificationEmail = async (req, res, next) => {
       }
       const jsonData = await response.json();
       if (jsonData.data.errorCode === "INVALID_OAUTHTOKEN") {
-        console.log('Access token expired, refreshing token...');
+        req.log.info('Access token expired, refreshing token...');
         process.env.ACCESS_TOKEN_ZOHO_MAIL = await refreshAccessToken();
       } else {
-        console.log('Spa manager notification email sent successfully');
+        req.log.info('Spa manager notification email sent successfully');
         break;
       }
       tries -= 1;
     }
     next()
   } catch (error) {
-    console.error('Failed to send spa manager notification email:', error.message)
+    req.log.error({ err: error }, 'Failed to send spa manager notification email')
     next(error)
   }
 }

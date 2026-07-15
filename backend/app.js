@@ -2,9 +2,22 @@ import express from 'express';
 import mongoose from "mongoose"
 const { connect, connection } = mongoose
 import { createServer } from 'node:http'
+import { randomUUID } from 'node:crypto'
 import multer from 'multer'
+import pinoHttp from 'pino-http'
+import logger from "./logger.js"
 import { loadParameters } from "./cloud.js"
 import { sendBuild, setBuild } from "./db/build.js"
+
+process.on('uncaughtException', (err) => {
+    logger.fatal({ err }, 'Uncaught exception, shutting down')
+    process.exit(1)
+})
+
+process.on('unhandledRejection', (reason) => {
+    logger.fatal({ err: reason }, 'Unhandled promise rejection, shutting down')
+    process.exit(1)
+})
 
 const INITIAL_RETRY_DELAY_MS = 5000
 const MAX_RETRY_DELAY_MS = 60000
@@ -14,9 +27,9 @@ async function connectWRetry(DB_URI, onFirstConnect) {
     for (;;) {
         try {
             await connect(DB_URI, { serverSelectionTimeoutMS: 5000 })
-            console.log("Connected to MongoDB")
+            logger.info("Connected to MongoDB")
         } catch (error) {
-            console.error(`MongoDB connection failed: ${error.message}. Retrying in ${delay / 1000}s...`)
+            logger.warn({ err: error, retryDelayMs: delay }, 'MongoDB connection failed, retrying')
             await new Promise(resolve => setTimeout(resolve, delay))
             delay = Math.min(delay * 2, MAX_RETRY_DELAY_MS)
             continue
@@ -25,7 +38,7 @@ async function connectWRetry(DB_URI, onFirstConnect) {
             try {
                 await onFirstConnect()
             } catch (error) {
-                console.error("Connected to MongoDB, but the post-connect test query failed:", error.message)
+                logger.error({ err: error }, 'Connected to MongoDB, but the post-connect test query failed')
             }
         }
         return
@@ -34,12 +47,11 @@ async function connectWRetry(DB_URI, onFirstConnect) {
 
 loadParameters().then(async () => {
     let { DB_URI } = await import("./initDB.js")
-    // console.log(DB_URI)
     //Set public image expiration time
     if (!process.env.PUBLIC_IMG_EXP) {
         process.env.PUBLIC_IMG_EXP = 5
     }
-    console.log(`Public image expiration time set to ${process.env.PUBLIC_IMG_EXP} hours`)
+    logger.info({ publicImgExpHours: process.env.PUBLIC_IMG_EXP }, 'Public image expiration time set')
     let { signUrl, buildSignedUrlsObj } = await import("./managerS3.js")
     let { testDbConnection } = await import("./testDb.js")
     let { verifyBooking, confirmBooking } = await import("./bookingVerification.js")
@@ -60,6 +72,22 @@ loadParameters().then(async () => {
         const server = createServer(app);
         const upload = multer()
 
+        app.use(pinoHttp({
+            logger,
+            genReqId: (req, res) => {
+                const id = req.headers['x-request-id'] || randomUUID()
+                res.setHeader('x-request-id', id)
+                return id
+            },
+            autoLogging: {
+                ignore: (req) => req.url === '/api/health'
+            },
+            customLogLevel: (req, res, err) => {
+                if (err || res.statusCode >= 500) return 'error'
+                if (res.statusCode >= 400) return 'warn'
+                return 'info'
+            }
+        }))
         app.use(express.urlencoded({ extended: true }))
         app.use(express.json());
         app.use(setBuild)
@@ -105,17 +133,17 @@ loadParameters().then(async () => {
         app.post('/api/rez541/v1.1/spa/confirmbooking', confirmSpaBooking, sendSpaManagerNotificationEmail, sendBuild)
 
         app.use((err, req, res, next) => {
-            console.error(err.stack);
+            (req.log || logger).error({ err }, 'Unhandled error while handling request');
             res.status(500).json({ message: 'Internal Server Error', error: err.message });
         })
 
         const PORT = process.env.PORT || 4000;
 
         server.listen(PORT, () => {
-            console.log(`API server is running on port ${PORT}`);
+            logger.info({ port: PORT }, 'API server is running');
         });
     }
 }).catch((error) => {
-    console.error("Fatal error during startup:", error);
+    logger.fatal({ err: error }, 'Fatal error during startup');
     process.exit(1);
 })

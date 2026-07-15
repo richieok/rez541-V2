@@ -1,7 +1,8 @@
 import { SSMClient, GetParametersByPathCommand } from "@aws-sdk/client-ssm"
+import logger from "./logger.js"
 
 async function getParameters(client, path) {
-    console.log(path)
+    logger.debug({ path }, 'Fetching SSM parameters')
     const input = {
         Path: path,
         Recursive: true,
@@ -11,7 +12,7 @@ async function getParameters(client, path) {
     const response = await client.send(command);
 
     response.Parameters.forEach(param => {
-        console.log(`Loading parameter: ${param.Name}`);
+        logger.info({ parameter: param.Name }, 'Loading parameter');
         const key = param.Name.replace(path, '').toUpperCase();
         process.env[key] = param.Value;
     });
@@ -27,6 +28,6 @@ export const loadParameters = async () => {
         }
         const client = new SSMClient({ region: process.env.REGION });
         await getParameters(client, process.env.SSM_PARAMETER_PATH);
-        console.log("Parameters loaded from AWS SSM");
+        logger.info("Parameters loaded from AWS SSM");
     }
 };

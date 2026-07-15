@@ -1,11 +1,20 @@
+# Cap json-file log growth so long-running containers can't fill the disk
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: "3"
+
 services:
   backend:
     build: ./backend
     container_name: backend_dev
     command: npm run start
+    logging: *default-logging
     environment:
       - PORT=4000
       - NODE_ENV=development
+      - LOG_LEVEL=${LOG_LEVEL:-debug}
       - TEST=RED_LIGHT
       - AWS_BUCKET=rez541bucket
       - REGION=us-east-1
@@ -29,6 +38,9 @@ services:
         context: ./frontend
         dockerfile: Dockerfile.dev
       container_name: frontend_dev
+      logging: *default-logging
+      environment:
+        - LOG_LEVEL=${LOG_LEVEL:-debug}
       ports:
         - 5173:5173
       networks:

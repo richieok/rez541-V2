@@ -1,6 +1,8 @@
+import logger from '$lib/server/logger.js';
+
 const confirmationMessage = 'Booking confirmed successfully'
 
-export const load = async ({ url }) => {
+export const load = async ({ url, fetch }) => {
     const bookingToken = url.searchParams.get('token') || null;
     try {
         const response = await fetch(`http://backend:4000/api/rez541/v1.1/confirmbooking`,
@@ -23,6 +25,7 @@ export const load = async ({ url }) => {
             }
         };
     } catch (error) {
+        logger.error({ err: error }, 'Booking confirmation failed');
         return {
             bookingData: {
                 success: false,

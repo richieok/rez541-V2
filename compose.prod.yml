@@ -1,9 +1,22 @@
+# Container logs ship to CloudWatch Logs (log group per service) using the
+# EC2 instance role. The log groups are created with a retention policy by
+# cfn-templates/rez541-traefik.yml; awslogs-create-group is a fallback so the
+# stack still boots if they don't exist yet.
+x-awslogs-options: &awslogs-options
+  awslogs-region: us-east-1
+  awslogs-create-group: "true"
+
 services:
   traefik:
     image: traefik:v3.6.1
     environment:
       - DOCKER_API_VERSION=1.44
     container_name: traefik
+    logging:
+      driver: awslogs
+      options:
+        <<: *awslogs-options
+        awslogs-group: /rez541/traefik
     command:
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
@@ -14,6 +27,9 @@ services:
       - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web
       - --certificatesresolvers.letsencrypt.acme.email=admin@residence541.com
       - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+      - --log.level=INFO
+      - --accesslog=true
+      - --accesslog.format=json
       - --api.dashboard=true
       - --api.insecure=true
     ports:
@@ -31,9 +47,15 @@ services:
     container_name: backend
     working_dir: /app
     command: npm run start
+    logging:
+      driver: awslogs
+      options:
+        <<: *awslogs-options
+        awslogs-group: /rez541/backend
     environment:
       - PORT=4000
-      - NODE_ENV=development
+      - NODE_ENV=production
+      - LOG_LEVEL=${LOG_LEVEL:-info}
       - TEST=RED_LIGHT
       - AWS_BUCKET=rez541bucket
       - CLOUD=aws
@@ -52,6 +74,14 @@ services:
   frontend:
     build: ./frontend
     container_name: frontend
+    logging:
+      driver: awslogs
+      options:
+        <<: *awslogs-options
+        awslogs-group: /rez541/frontend
+    environment:
+      - NODE_ENV=production
+      - LOG_LEVEL=${LOG_LEVEL:-info}
     networks:
       - cosmosnet
     labels:

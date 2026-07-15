@@ -12,10 +12,18 @@
 # Data persists in the mongo-fake-data volume between runs. To start clean:
 #   docker compose -f compose.yml -f compose.fakedb.yml down -v
 
+# Cap json-file log growth so long-running containers can't fill the disk
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: "3"
+
 services:
   mongo:
     image: mongo:7
     container_name: mongo_fake
+    logging: *default-logging
     ports:
       # Exposed on the host so you can inspect data with mongosh / Compass:
       #   mongodb://localhost:27017/rez541db
@@ -29,6 +37,7 @@ services:
   mongo-express:
     image: mongo-express:1.0.2
     container_name: mongo_express_fake
+    logging: *default-logging
     ports:
       - 8081:8081
     environment:
