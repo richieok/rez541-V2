@@ -84,6 +84,8 @@
     });
 </script>
 
+<svelte:head><title>Spa</title></svelte:head>
+
 <div class="page-wrapper fade-in">
     {#if imagesReady}
         <section class="s-hero fade-in">

@@ -59,6 +59,10 @@
     });
 </script>
 
+<svelte:head>
+    <title>Spa Service Menu - Residence 541</title>
+</svelte:head>
+
 <div class="page-wrapper fade-in">
 
     <!-- Hero -->
