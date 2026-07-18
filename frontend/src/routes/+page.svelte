@@ -10,10 +10,10 @@
     import { cacheSignedUrls } from "$lib/utils/signedUrlCache.js";
 
     let { data } = $props();
-    let { signedUrls, amenitiesDataArray } = data;
+    let { signedUrls, heroImage, amenitiesDataArray } = data;
 
     let imagesReady = $state(false);
-    const heroSrc = signedUrls?.["public/spa/reception3.jpg"];
+    const heroSrc = signedUrls?.[heroImage];
 
     // The hero URL is already signed server-side; cache it during init so
     // other pages (and <SignedImage>s) can reuse it instead of re-signing.
