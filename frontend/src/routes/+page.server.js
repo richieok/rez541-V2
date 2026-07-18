@@ -1,5 +1,5 @@
 import { retrieveSignedUrls } from '$lib/server/signing.js';
-import { getHeroImage } from '$lib/server/bookingApp.js';
+import { getHeroImage } from '$lib/server/api.js';
 import logger from '$lib/server/logger.js';
 
 // Falls back to the current default photo if the backend/database is

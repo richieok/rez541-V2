@@ -1,4 +1,4 @@
-import { getRooms } from "$lib/server/bookingApp.js"
+import { getRooms } from "$lib/server/api.js"
 import logger from "$lib/server/logger.js"
 
 function formatDateWithTime(dateString, hour) {
