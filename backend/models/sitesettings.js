@@ -5,18 +5,14 @@ const siteSettingsSchema = new Schema({
         type: String,
         required: true,
         unique: true,
-        index: true,
         // Example: "home_hero_image"
-    },
-    value: {
-        type: String,
-        // Example: "public/spa/reception3.jpg"
-        // Used for single-image settings; mutually exclusive with `values`.
     },
     values: {
         type: [String],
+        required: true,
+        // A single-image setting is just a one-entry array.
+        // Example: ["public/spa/reception3.jpg"]
         // Example: ["public/spa/living-room.jpg", "public/spa/scrub-room2.jpg"]
-        // Used for gallery/collage settings; mutually exclusive with `value`.
     },
 }, {
     timestamps: true,

@@ -1,35 +1,24 @@
-export async function getRooms() {
-    let res = await fetch(`http://backend:4000/api/rez541/v1.1/getrooms`)
-    if (!res.ok){
-        throw new Error(`Failed to fetch rooms: ${res.status}`)
+async function getJson(path, label) {
+    const res = await fetch(`http://backend:4000/api/rez541/v1.1${path}`)
+    if (!res.ok) {
+        throw new Error(`Failed to fetch ${label}: ${res.status}`)
     }
-    const { roomsArray } = await res.json()
+    return res.json()
+}
+
+export async function getRooms() {
+    const { roomsArray } = await getJson('/getrooms', 'rooms')
     return roomsArray
 }
 
 export async function getHomeImages() {
-    let res = await fetch(`http://backend:4000/api/rez541/v1.1/home/images`)
-    if (!res.ok){
-        throw new Error(`Failed to fetch home images: ${res.status}`)
-    }
-    const { heroImage, collageImages } = await res.json()
-    return { heroImage, collageImages }
+    return getJson('/home/images', 'home images')
 }
 
 export async function getSpaImages() {
-    let res = await fetch(`http://backend:4000/api/rez541/v1.1/spa/images`)
-    if (!res.ok){
-        throw new Error(`Failed to fetch spa images: ${res.status}`)
-    }
-    const { heroImage, lotusImage, galleryImages } = await res.json()
-    return { heroImage, lotusImage, galleryImages }
+    return getJson('/spa/images', 'spa images')
 }
 
 export async function getServiceMenuImages() {
-    let res = await fetch(`http://backend:4000/api/rez541/v1.1/spa/service-menu/images`)
-    if (!res.ok){
-        throw new Error(`Failed to fetch service menu images: ${res.status}`)
-    }
-    const { heroImage, lotusImage } = await res.json()
-    return { heroImage, lotusImage }
+    return getJson('/spa/service-menu/images', 'service menu images')
 }

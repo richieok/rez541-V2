@@ -49,20 +49,24 @@
             </p>
         </div>
         <div class="about-collage">
-            <figure class="collage-a">
-                <SignedImage
-                    src={collageImages?.[0]}
-                    alt="Living room in a three-bedroom suite"
-                    class="fade-in"
-                />
-            </figure>
-            <figure class="collage-b">
-                <SignedImage
-                    src={collageImages?.[1]}
-                    alt="Exterior view of Residence 541, Block One"
-                    class="fade-in"
-                />
-            </figure>
+            {#if collageImages?.[0]}
+                <figure class="collage-a">
+                    <SignedImage
+                        src={collageImages[0]}
+                        alt="Living room in a three-bedroom suite"
+                        class="fade-in"
+                    />
+                </figure>
+            {/if}
+            {#if collageImages?.[1]}
+                <figure class="collage-b">
+                    <SignedImage
+                        src={collageImages[1]}
+                        alt="Exterior view of Residence 541, Block One"
+                        class="fade-in"
+                    />
+                </figure>
+            {/if}
         </div>
     </section>
 

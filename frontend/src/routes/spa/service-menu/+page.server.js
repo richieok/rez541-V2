@@ -1,41 +1,42 @@
-import { retrieveSignedUrls } from '$lib/server/signing.js';
 import { getServiceMenuImages } from '$lib/server/api.js';
 import logger from '$lib/server/logger.js';
 
-// Falls back to these defaults if the backend/database is unreachable, so
-// the service menu page still renders images.
-const DEFAULT_SERVICE_MENU_IMAGES = {
-    heroImage: "public/spa/Gemini_Generated_Image_o7r9y0o7r9y0o7r9.png",
-    lotusImage: "public/spa/spa-lotus-plain.svg",
-};
-
-export async function load({ fetch }) {
-    let menu = null;
+async function fetchMenu(fetch) {
     try {
-        const menuRes = await fetch('http://backend:4000/api/rez541/v1.1/spa/menu');
-        if (menuRes.ok) {
-            ({ spaMenu: menu } = await menuRes.json());
-        } else {
-            logger.error({ status: menuRes.status }, 'Failed to fetch spa menu');
+        const res = await fetch('http://backend:4000/api/rez541/v1.1/spa/menu');
+        if (!res.ok) {
+            logger.error({ status: res.status }, 'Failed to fetch spa menu');
+            return null;
         }
+        const { spaMenu } = await res.json();
+        return spaMenu;
     } catch (error) {
         logger.error({ err: error }, 'Failed to fetch spa menu');
+        return null;
     }
+}
 
-    let { heroImage, lotusImage } = DEFAULT_SERVICE_MENU_IMAGES;
+async function fetchImages() {
+    // Hero/lotus keys and their signed URLs come from a single backend call.
+    // On failure we degrade to no images rather than a hardcoded fallback
+    // photo the backend may no longer even serve.
     try {
-        ({ heroImage, lotusImage } = await getServiceMenuImages());
+        return await getServiceMenuImages();
     } catch (error) {
-        logger.error({ err: error }, 'Failed to retrieve service menu images from backend, using defaults');
+        logger.error({ err: error }, 'Failed to retrieve service menu images from backend');
+        return { signedUrls: {} };
     }
+}
 
-    let signedUrls = {};
-    const res = await retrieveSignedUrls([heroImage, lotusImage]);
-    if (res.error) {
-        logger.error({ statusText: res.statusText }, 'Failed to retrieve signed URLs');
-    } else {
-        ({ signedUrls } = await res.json());
-    }
+export async function load({ fetch }) {
+    // Menu and images are independent, so fetch them concurrently instead
+    // of one after another.
+    const [menu, images] = await Promise.all([fetchMenu(fetch), fetchImages()]);
 
-    return { signedUrls, heroImage, lotusImage, menu };
+    return {
+        signedUrls: images.signedUrls,
+        heroImage: images.heroImage,
+        lotusImage: images.lotusImage,
+        menu
+    };
 }

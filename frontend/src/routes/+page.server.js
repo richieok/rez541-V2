@@ -1,16 +1,5 @@
-import { retrieveSignedUrls } from '$lib/server/signing.js';
 import { getHomeImages } from '$lib/server/api.js';
 import logger from '$lib/server/logger.js';
-
-// Falls back to these defaults if the backend/database is unreachable, so
-// the home page still renders images.
-const DEFAULT_HOME_IMAGES = {
-    heroImage: "public/spa/reception3.jpg",
-    collageImages: [
-        "public/3-bed-suite/living-room-3-bed.jpg",
-        "public/exterior/block1-view-800w.jpg",
-    ],
-};
 
 const amenitiesDataArray = [
     {
@@ -36,21 +25,16 @@ const amenitiesDataArray = [
 ]
 
 export const load = async () => {
-    let { heroImage, collageImages } = DEFAULT_HOME_IMAGES;
+    // Hero and collage keys plus the signed hero URL now come from a single
+    // backend call; on failure we degrade to no images rather than a
+    // hardcoded fallback photo the backend may no longer even serve.
+    let { heroImage, collageImages, signedUrls } = { collageImages: [], signedUrls: {} };
     try {
-        ({ heroImage, collageImages } = await getHomeImages());
+        ({ heroImage, collageImages, signedUrls } = await getHomeImages());
     } catch (error) {
-        logger.error({ err: error }, 'Failed to retrieve home images from backend, using defaults');
+        logger.error({ err: error }, 'Failed to retrieve home images from backend');
     }
 
-    // Only the hero is signed server-side so it can start downloading with the
-    // first paint; the collage images resolve client-side via <SignedImage>.
-    const res = await retrieveSignedUrls([heroImage]);
-    if (res.error) {
-        logger.error({ statusText: res.statusText }, 'Failed to retrieve signed URLs');
-        return {};
-    }
-    const { signedUrls } = await res.json();
     return {
         signedUrls,
         heroImage,
