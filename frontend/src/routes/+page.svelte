@@ -10,7 +10,7 @@
     import { cacheSignedUrls } from "$lib/utils/signedUrlCache.js";
 
     let { data } = $props();
-    let { signedUrls, heroImage, amenitiesDataArray } = data;
+    let { signedUrls, heroImage, collageImages, amenitiesDataArray } = data;
 
     let imagesReady = $state(false);
     const heroSrc = signedUrls?.[heroImage];
@@ -51,14 +51,14 @@
         <div class="about-collage">
             <figure class="collage-a">
                 <SignedImage
-                    src="public/3-bed-suite/living-room-3-bed.jpg"
+                    src={collageImages?.[0]}
                     alt="Living room in a three-bedroom suite"
                     class="fade-in"
                 />
             </figure>
             <figure class="collage-b">
                 <SignedImage
-                    src="public/exterior/block1-view-800w.jpg"
+                    src={collageImages?.[1]}
                     alt="Exterior view of Residence 541, Block One"
                     class="fade-in"
                 />

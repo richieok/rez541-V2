@@ -6,16 +6,12 @@
     import { cacheSignedUrls } from "$lib/utils/signedUrlCache.js";
 
     let { data } = $props();
-    let { signedUrls } = data;
+    let { signedUrls, heroImage, lotusImage, galleryImages } = data;
 
     let imagesReady = $state(false);
-    const heroSrc = signedUrls?.["public/spa/scrub-room.jpg"];
-    const lotusSrc = signedUrls?.["public/spa/spa-lotus-plain.svg"];
-    const galleryKeys = [
-        "public/spa/living-room.jpg",
-        "public/spa/scrub-room-shot.jpg",
-        "public/spa/scrub-room2.jpg",
-    ];
+    const heroSrc = signedUrls?.[heroImage];
+    const lotusSrc = signedUrls?.[lotusImage];
+    const galleryKeys = galleryImages ?? [];
 
     // The hero URLs are already signed server-side; cache them during init
     // so other pages (and <SignedImage>s) can reuse them instead of

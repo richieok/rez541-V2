@@ -1,10 +1,16 @@
 import { retrieveSignedUrls } from '$lib/server/signing.js';
-import { getHeroImage } from '$lib/server/api.js';
+import { getHomeImages } from '$lib/server/api.js';
 import logger from '$lib/server/logger.js';
 
-// Falls back to the current default photo if the backend/database is
-// unreachable, so the home page still renders a hero image.
-const DEFAULT_HERO_IMAGE = "public/spa/reception3.jpg";
+// Falls back to these defaults if the backend/database is unreachable, so
+// the home page still renders images.
+const DEFAULT_HOME_IMAGES = {
+    heroImage: "public/spa/reception3.jpg",
+    collageImages: [
+        "public/3-bed-suite/living-room-3-bed.jpg",
+        "public/exterior/block1-view-800w.jpg",
+    ],
+};
 
 const amenitiesDataArray = [
     {
@@ -30,11 +36,11 @@ const amenitiesDataArray = [
 ]
 
 export const load = async () => {
-    let heroImage = DEFAULT_HERO_IMAGE;
+    let { heroImage, collageImages } = DEFAULT_HOME_IMAGES;
     try {
-        heroImage = await getHeroImage();
+        ({ heroImage, collageImages } = await getHomeImages());
     } catch (error) {
-        logger.error({ err: error }, 'Failed to retrieve hero image from backend, using default');
+        logger.error({ err: error }, 'Failed to retrieve home images from backend, using defaults');
     }
 
     // Only the hero is signed server-side so it can start downloading with the
@@ -48,6 +54,7 @@ export const load = async () => {
     return {
         signedUrls,
         heroImage,
+        collageImages,
         amenitiesDataArray
     };
 }

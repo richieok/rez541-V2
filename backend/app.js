@@ -57,7 +57,7 @@ loadParameters().then(async () => {
     let { verifyBooking, confirmBooking } = await import("./bookingVerification.js")
     let { sendVerificationEmail, sendManagerNotificationEmail, sendSpaVerificationEmail, sendSpaManagerNotificationEmail } = await import("./functions/email.js")
     let { buildRoomsArray, buildRoomById } = await import("./db/rooms.js")
-    let { buildHeroImage } = await import("./db/sitesettings.js")
+    let { buildHomeImages, buildSpaImages, buildServiceMenuImages } = await import("./db/sitesettings.js")
     let { getSpaServices, getSpaMenu, getSpaAvailability, verifySpaBooking, confirmSpaBooking } = await import("./spa/spaBooking.js")
 
     startservice()
@@ -123,7 +123,11 @@ loadParameters().then(async () => {
 
         app.get('/api/rez541/v1.1/getroombyid/id/:id', buildRoomById, sendBuild);
 
-        app.get('/api/rez541/v1.1/home/hero', buildHeroImage, sendBuild);
+        app.get('/api/rez541/v1.1/home/images', buildHomeImages, sendBuild);
+
+        app.get('/api/rez541/v1.1/spa/images', buildSpaImages, sendBuild);
+
+        app.get('/api/rez541/v1.1/spa/service-menu/images', buildServiceMenuImages, sendBuild);
 
         app.get('/api/rez541/v1.1/spa/services', getSpaServices, sendBuild)
 

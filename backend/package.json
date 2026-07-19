@@ -6,7 +6,7 @@
     "start": "node app.js",
     "seed:spa": "node seedSpa.js",
     "seed:rooms": "node seedRooms.js",
-    "seed:hero": "node seedHeroImage.js",
+    "seed:site-settings": "node seedSiteSettings.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

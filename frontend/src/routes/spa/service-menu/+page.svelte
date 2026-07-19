@@ -2,10 +2,10 @@
     import { onMount } from 'svelte';
 
     let { data } = $props();
-    let { signedUrls, menu } = data;
+    let { signedUrls, heroImage, lotusImage, menu } = data;
 
-    const heroImg = signedUrls?.["public/spa/Gemini_Generated_Image_o7r9y0o7r9y0o7r9.png"];
-    const lotusImg = signedUrls?.["public/spa/spa-lotus-plain.svg"];
+    const heroImg = signedUrls?.[heroImage];
+    const lotusImg = signedUrls?.[lotusImage];
 
     // Menu content comes from GET /api/rez541/v1.1/spa/menu (single source
     // of truth in backend/spa/services.js), fetched in +page.server.js.
