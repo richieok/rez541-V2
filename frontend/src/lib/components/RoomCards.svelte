@@ -1,6 +1,8 @@
 <script>
     import Carousel from "./Carousel.svelte";
-    let { name = "Room Title", images = [], price = "100,000", id } = $props();
+    let { name = "Room Title", images = [], price = 100000, id } = $props();
+
+    let formattedPrice = $derived(Number(price).toLocaleString());
 </script>
 
 <div class="room-card">
@@ -10,7 +12,7 @@
     <div class="card-body">
         <div class="card-info">
             <h2>{name}</h2>
-            <p class="price">&#8358;{price}<span class="per">/night</span></p>
+            <p class="price">&#8358;{formattedPrice}<span class="per">/night</span></p>
         </div>
         <a href="/room/{id}" class="book-btn">View Room</a>
     </div>

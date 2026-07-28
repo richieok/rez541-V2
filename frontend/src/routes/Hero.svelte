@@ -5,7 +5,7 @@
 
 <div class="hero">
     <div class="content">
-        <div class="reveal r1"><KeyTag text="Plot 541 · Wuye, Abuja" /></div>
+        <div class="reveal r1"><KeyTag text="541 · Wuye, Abuja" /></div>
         <h1 class="reveal r2">
             <span class="kicker">Residence</span>
             <span class="numeral">541.</span>
@@ -13,7 +13,7 @@
         <p class="reveal r3">A quiet address in the capital.</p>
         <div class="actions reveal r4">
             <a class="cta" href="/rooms">Book Now</a>
-            <a class="ghost-link" href="#about">Explore the residence ↓</a>
+            <a class="ghost-link" href="#about">Explore ↓</a>
         </div>
     </div>
     <div class="photo">
