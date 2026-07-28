@@ -21,9 +21,30 @@
         cacheSignedUrls(signedUrls);
     }
 
+    let aboutTextEl;
+    let aboutTextInView = $state(false);
+
     onMount(async () => {
         await preloadImages([heroSrc]);
         imagesReady = true;
+    });
+
+    onMount(() => {
+        // Fallback for browsers without scroll-driven animation support
+        // (animation-timeline: view()), which drives .about-text in CSS.
+        if (browser && !CSS.supports("animation-timeline: view()")) {
+            const observer = new IntersectionObserver(
+                ([entry]) => {
+                    if (entry.isIntersecting) {
+                        aboutTextInView = true;
+                        observer.disconnect();
+                    }
+                },
+                { threshold: 0.2 },
+            );
+            observer.observe(aboutTextEl);
+            return () => observer.disconnect();
+        }
     });
 </script>
 
@@ -38,14 +59,18 @@
     {/if}
 
     <section class="about" id="about">
-        <div class="about-text">
-            <KeyTag text="The Residence" />
+        <div
+            class="about-text"
+            class:in-view={aboutTextInView}
+            bind:this={aboutTextEl}
+        >
+            <!-- <KeyTag text="The Residence" /> -->
             <p class="quote">
-                <span class="mark">&ldquo;</span>At Residence 541, we believe our
-                guests deserve more than just a place to stay, they deserve a
-                great experience. From therapeutic spa treatments to
-                personalized services, we've created a space where memories
-                are made and spirits are renewed.
+                <span class="mark">&ldquo;</span>At Residence 541, we believe
+                our guests deserve more than just a place to stay, they deserve
+                a great experience. From therapeutic spa treatments to
+                personalized services, we've created a space where memories are
+                made and spirits are renewed.
             </p>
         </div>
         <div class="about-collage">
@@ -129,6 +154,36 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 1.4rem;
+        opacity: 0.5;
+        scale: 0.9;
+        transition:
+            opacity 0.6s ease,
+            scale 0.6s ease;
+    }
+
+    .about-text.in-view {
+        opacity: 1;
+        scale: 1;
+    }
+
+    @supports (animation-timeline: view()) {
+        .about-text {
+            transition: none;
+            animation: about-text-reveal ease-in both;
+            animation-timeline: view();
+            animation-range: entry 0% entry 100%;
+        }
+    }
+
+    @keyframes about-text-reveal {
+        from {
+            opacity: 0.5;
+            scale: 0.9;
+        }
+        to {
+            opacity: 1;
+            scale: 1;
+        }
     }
 
     .quote {
