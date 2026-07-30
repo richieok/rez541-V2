@@ -21,8 +21,8 @@
         cacheSignedUrls(signedUrls);
     }
 
-    let aboutTextEl;
-    let aboutTextInView = $state(false);
+    let aboutCollageEl;
+    let aboutCollageInView = $state(false);
 
     onMount(async () => {
         await preloadImages([heroSrc]);
@@ -31,18 +31,18 @@
 
     onMount(() => {
         // Fallback for browsers without scroll-driven animation support
-        // (animation-timeline: view()), which drives .about-text in CSS.
+        // (animation-timeline: view()), which drives .about-collage in CSS.
         if (browser && !CSS.supports("animation-timeline: view()")) {
             const observer = new IntersectionObserver(
                 ([entry]) => {
                     if (entry.isIntersecting) {
-                        aboutTextInView = true;
+                        aboutCollageInView = true;
                         observer.disconnect();
                     }
                 },
                 { threshold: 0.2 },
             );
-            observer.observe(aboutTextEl);
+            observer.observe(aboutCollageEl);
             return () => observer.disconnect();
         }
     });
@@ -59,11 +59,7 @@
     {/if}
 
     <section class="about" id="about">
-        <div
-            class="about-text"
-            class:in-view={aboutTextInView}
-            bind:this={aboutTextEl}
-        >
+        <div class="about-text">
             <!-- <KeyTag text="The Residence" /> -->
             <p class="quote">
                 <span class="mark">&ldquo;</span>At Residence 541, we believe
@@ -73,7 +69,11 @@
                 made and spirits are renewed.
             </p>
         </div>
-        <div class="about-collage">
+        <div
+            class="about-collage"
+            class:in-view={aboutCollageInView}
+            bind:this={aboutCollageEl}
+        >
             {#if collageImages?.[0]}
                 <figure class="collage-a">
                     <SignedImage
@@ -154,36 +154,6 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 1.4rem;
-        opacity: 0.5;
-        scale: 0.9;
-        transition:
-            opacity 0.6s ease,
-            scale 0.6s ease;
-    }
-
-    .about-text.in-view {
-        opacity: 1;
-        scale: 1;
-    }
-
-    @supports (animation-timeline: view()) {
-        .about-text {
-            transition: none;
-            animation: about-text-reveal ease-in both;
-            animation-timeline: view();
-            animation-range: entry 0% entry 100%;
-        }
-    }
-
-    @keyframes about-text-reveal {
-        from {
-            opacity: 0.5;
-            scale: 0.9;
-        }
-        to {
-            opacity: 1;
-            scale: 1;
-        }
     }
 
     .quote {
@@ -212,6 +182,36 @@
         position: relative;
         aspect-ratio: 5 / 4;
         margin-bottom: 2rem;
+        opacity: 0.5;
+        scale: 0.9;
+        transition:
+            opacity 0.6s ease,
+            scale 0.6s ease;
+    }
+
+    .about-collage.in-view {
+        opacity: 1;
+        scale: 1;
+    }
+
+    @supports (animation-timeline: view()) {
+        .about-collage {
+            transition: none;
+            animation: collage-reveal ease-in both;
+            animation-timeline: view();
+            animation-range: entry 0% entry 100%;
+        }
+    }
+
+    @keyframes collage-reveal {
+        from {
+            opacity: 0.5;
+            scale: 0.9;
+        }
+        to {
+            opacity: 1;
+            scale: 1;
+        }
     }
 
     .about-collage figure {
