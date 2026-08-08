@@ -4,9 +4,9 @@
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
-		"dev": "vite dev --host",
-		"build": "vite build",
-		"preview": "vite preview",
+		"dev": "bunx --bun vite dev --host",
+		"build": "bunx --bun vite build",
+		"preview": "bunx --bun vite preview",
 		"prepare": "svelte-kit sync || echo ''"
 	},
 	"devDependencies": {

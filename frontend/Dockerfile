@@ -1,19 +1,19 @@
-FROM node:alpine AS build
+FROM oven/bun:1-alpine AS build
 # Set the working directory
 WORKDIR /app
-# Copy package.json and package-lock.json
-COPY package*.json ./
-RUN npm install
+# Copy package.json and bun.lock
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
 COPY . .
-RUN npm run build
+RUN bun run build
 
-FROM node:alpine AS production
+FROM oven/bun:1-alpine AS production
 # Copy the built files from the build stage
 WORKDIR /app
 COPY --from=build /app/build ./build
-COPY --from=build /app/package.json ./
-RUN npm install --omit=dev
+COPY --from=build /app/package.json /app/bun.lock ./
+RUN bun install --production --frozen-lockfile
 COPY ./static ./static
 # COPY ./other-static-assets ./other-static-assets
 # EXPOSE 3000
-CMD ["node", "build/index.js"]
+CMD ["bun", "build/index.js"]

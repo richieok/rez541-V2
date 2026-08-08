@@ -6,9 +6,9 @@
 #   (or: docker compose -f compose.yml -f compose.fakedb.yml up --build --watch)
 #
 # Seed it with fake spa bookings, the room catalogue, and site settings:
-#   docker compose -f compose.yml -f compose.fakedb.yml exec backend npm run seed:spa
-#   docker compose -f compose.yml -f compose.fakedb.yml exec backend npm run seed:rooms
-#   docker compose -f compose.yml -f compose.fakedb.yml exec backend npm run seed:site-settings
+#   docker compose -f compose.yml -f compose.fakedb.yml exec backend bun run seed:spa
+#   docker compose -f compose.yml -f compose.fakedb.yml exec backend bun run seed:rooms
+#   docker compose -f compose.yml -f compose.fakedb.yml exec backend bun run seed:site-settings
 #
 # Data persists in the mongo-fake-data volume between runs. To start clean:
 #   docker compose -f compose.yml -f compose.fakedb.yml down -v

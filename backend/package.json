@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "seed:spa": "node seedSpa.js",
-    "seed:rooms": "node seedRooms.js",
-    "seed:site-settings": "node seedSiteSettings.js",
+    "start": "bun app.js",
+    "seed:spa": "bun seedSpa.js",
+    "seed:rooms": "bun seedRooms.js",
+    "seed:site-settings": "bun seedSiteSettings.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

@@ -1,9 +1,9 @@
-FROM node:alpine
+FROM oven/bun:1-alpine
 
 # Set the working directory
 WORKDIR /app
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Copy package.json and bun.lock
+COPY package.json bun.lock ./
 COPY . ./
 
-RUN npm install
+RUN bun install --frozen-lockfile

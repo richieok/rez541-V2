@@ -46,7 +46,7 @@ services:
     build: ./backend
     container_name: backend
     working_dir: /app
-    command: npm run start
+    command: bun run start
     logging:
       driver: awslogs
       options:

@@ -46,7 +46,7 @@ services:
     build: ./backend
     container_name: backend_local
     working_dir: /app
-    command: npm run start
+    command: bun run start
     logging: *default-logging
     environment:
       - PORT=4000
